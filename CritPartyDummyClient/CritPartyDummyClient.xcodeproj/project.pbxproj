@@ -1,0 +1,667 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1822EAB07A99F633F02F6D21 /* libPods-CritPartyDummyClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1BCA1EC27D35EBB22B2DD9 /* libPods-CritPartyDummyClient.a */; };
+		F46FF55A24780F7E00431386 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF55924780F7E00431386 /* AppDelegate.m */; };
+		F46FF55C24780F7F00431386 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F46FF55B24780F7F00431386 /* Assets.xcassets */; };
+		F46FF55F24780F7F00431386 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F46FF55D24780F7F00431386 /* MainMenu.xib */; };
+		F46FF56224780F7F00431386 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF56124780F7F00431386 /* main.m */; };
+		F46FF56D24780F7F00431386 /* CritPartyDummyClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF56C24780F7F00431386 /* CritPartyDummyClientTests.m */; };
+		F46FF57824780F7F00431386 /* CritPartyDummyClientUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF57724780F7F00431386 /* CritPartyDummyClientUITests.m */; };
+		F46FF58724780F8E00431386 /* SignalingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF58524780F8E00431386 /* SignalingClient.m */; };
+		F46FF58A24781C7200431386 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F46FF58824781C5D00431386 /* WebRTC.framework */; };
+		F46FF58B24781C7200431386 /* WebRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F46FF58824781C5D00431386 /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F46FF5932478248600431386 /* RTCIceCandidate+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF58D2478248500431386 /* RTCIceCandidate+JSON.m */; };
+		F46FF5942478248600431386 /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF58E2478248500431386 /* RTCSessionDescription+JSON.m */; };
+		F46FF5952478248600431386 /* RTCIceServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F46FF58F2478248500431386 /* RTCIceServer+JSON.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F46FF56924780F7F00431386 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F46FF54D24780F7E00431386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F46FF55424780F7E00431386;
+			remoteInfo = CritPartyDummyClient;
+		};
+		F46FF57424780F7F00431386 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F46FF54D24780F7E00431386 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F46FF55424780F7E00431386;
+			remoteInfo = CritPartyDummyClient;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F46FF58C24781C7200431386 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F46FF58B24781C7200431386 /* WebRTC.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2C1BCA1EC27D35EBB22B2DD9 /* libPods-CritPartyDummyClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CritPartyDummyClient.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		46C93314308571A23AD63F0D /* Pods-CritPartyDummyClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CritPartyDummyClient.release.xcconfig"; path = "Target Support Files/Pods-CritPartyDummyClient/Pods-CritPartyDummyClient.release.xcconfig"; sourceTree = "<group>"; };
+		F46FF55524780F7E00431386 /* CritPartyDummyClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CritPartyDummyClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F46FF55824780F7E00431386 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		F46FF55924780F7E00431386 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F46FF55B24780F7F00431386 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F46FF55E24780F7F00431386 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F46FF56024780F7F00431386 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F46FF56124780F7F00431386 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F46FF56324780F7F00431386 /* CritPartyDummyClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CritPartyDummyClient.entitlements; sourceTree = "<group>"; };
+		F46FF56824780F7F00431386 /* CritPartyDummyClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CritPartyDummyClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F46FF56C24780F7F00431386 /* CritPartyDummyClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CritPartyDummyClientTests.m; sourceTree = "<group>"; };
+		F46FF56E24780F7F00431386 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F46FF57324780F7F00431386 /* CritPartyDummyClientUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CritPartyDummyClientUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F46FF57724780F7F00431386 /* CritPartyDummyClientUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CritPartyDummyClientUITests.m; sourceTree = "<group>"; };
+		F46FF57924780F7F00431386 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F46FF58524780F8E00431386 /* SignalingClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalingClient.m; sourceTree = "<group>"; };
+		F46FF58624780F8E00431386 /* SignalingClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalingClient.h; sourceTree = "<group>"; };
+		F46FF58824781C5D00431386 /* WebRTC.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebRTC.framework; sourceTree = SOURCE_ROOT; };
+		F46FF58D2478248500431386 /* RTCIceCandidate+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RTCIceCandidate+JSON.m"; sourceTree = "<group>"; };
+		F46FF58E2478248500431386 /* RTCSessionDescription+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RTCSessionDescription+JSON.m"; sourceTree = "<group>"; };
+		F46FF58F2478248500431386 /* RTCIceServer+JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RTCIceServer+JSON.m"; sourceTree = "<group>"; };
+		F46FF5902478248500431386 /* RTCIceCandidate+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RTCIceCandidate+JSON.h"; sourceTree = "<group>"; };
+		F46FF5912478248600431386 /* RTCIceServer+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RTCIceServer+JSON.h"; sourceTree = "<group>"; };
+		F46FF5922478248600431386 /* RTCSessionDescription+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RTCSessionDescription+JSON.h"; sourceTree = "<group>"; };
+		FAF2F0F870165B08EBD45401 /* Pods-CritPartyDummyClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CritPartyDummyClient.debug.xcconfig"; path = "Target Support Files/Pods-CritPartyDummyClient/Pods-CritPartyDummyClient.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F46FF55224780F7E00431386 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1822EAB07A99F633F02F6D21 /* libPods-CritPartyDummyClient.a in Frameworks */,
+				F46FF58A24781C7200431386 /* WebRTC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F46FF56524780F7F00431386 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F46FF57024780F7F00431386 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		795F885F6A78578A6ED24A6A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FAF2F0F870165B08EBD45401 /* Pods-CritPartyDummyClient.debug.xcconfig */,
+				46C93314308571A23AD63F0D /* Pods-CritPartyDummyClient.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C707FA4C9163A99D6FCE7868 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2C1BCA1EC27D35EBB22B2DD9 /* libPods-CritPartyDummyClient.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F46FF54C24780F7E00431386 = {
+			isa = PBXGroup;
+			children = (
+				F46FF55724780F7E00431386 /* CritPartyDummyClient */,
+				F46FF56B24780F7F00431386 /* CritPartyDummyClientTests */,
+				F46FF57624780F7F00431386 /* CritPartyDummyClientUITests */,
+				F46FF55624780F7E00431386 /* Products */,
+				795F885F6A78578A6ED24A6A /* Pods */,
+				C707FA4C9163A99D6FCE7868 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F46FF55624780F7E00431386 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F46FF55524780F7E00431386 /* CritPartyDummyClient.app */,
+				F46FF56824780F7F00431386 /* CritPartyDummyClientTests.xctest */,
+				F46FF57324780F7F00431386 /* CritPartyDummyClientUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F46FF55724780F7E00431386 /* CritPartyDummyClient */ = {
+			isa = PBXGroup;
+			children = (
+				F46FF58624780F8E00431386 /* SignalingClient.h */,
+				F46FF58524780F8E00431386 /* SignalingClient.m */,
+				F46FF55824780F7E00431386 /* AppDelegate.h */,
+				F46FF55924780F7E00431386 /* AppDelegate.m */,
+				F46FF5902478248500431386 /* RTCIceCandidate+JSON.h */,
+				F46FF58D2478248500431386 /* RTCIceCandidate+JSON.m */,
+				F46FF5912478248600431386 /* RTCIceServer+JSON.h */,
+				F46FF58F2478248500431386 /* RTCIceServer+JSON.m */,
+				F46FF5922478248600431386 /* RTCSessionDescription+JSON.h */,
+				F46FF58E2478248500431386 /* RTCSessionDescription+JSON.m */,
+				F46FF58824781C5D00431386 /* WebRTC.framework */,
+				F46FF55B24780F7F00431386 /* Assets.xcassets */,
+				F46FF55D24780F7F00431386 /* MainMenu.xib */,
+				F46FF56024780F7F00431386 /* Info.plist */,
+				F46FF56124780F7F00431386 /* main.m */,
+				F46FF56324780F7F00431386 /* CritPartyDummyClient.entitlements */,
+			);
+			path = CritPartyDummyClient;
+			sourceTree = "<group>";
+		};
+		F46FF56B24780F7F00431386 /* CritPartyDummyClientTests */ = {
+			isa = PBXGroup;
+			children = (
+				F46FF56C24780F7F00431386 /* CritPartyDummyClientTests.m */,
+				F46FF56E24780F7F00431386 /* Info.plist */,
+			);
+			path = CritPartyDummyClientTests;
+			sourceTree = "<group>";
+		};
+		F46FF57624780F7F00431386 /* CritPartyDummyClientUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F46FF57724780F7F00431386 /* CritPartyDummyClientUITests.m */,
+				F46FF57924780F7F00431386 /* Info.plist */,
+			);
+			path = CritPartyDummyClientUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F46FF55424780F7E00431386 /* CritPartyDummyClient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F46FF57C24780F7F00431386 /* Build configuration list for PBXNativeTarget "CritPartyDummyClient" */;
+			buildPhases = (
+				715201EFB93CE080ABEFF59C /* [CP] Check Pods Manifest.lock */,
+				F46FF55124780F7E00431386 /* Sources */,
+				F46FF55224780F7E00431386 /* Frameworks */,
+				F46FF55324780F7E00431386 /* Resources */,
+				F46FF58C24781C7200431386 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CritPartyDummyClient;
+			productName = CritPartyDummyClient;
+			productReference = F46FF55524780F7E00431386 /* CritPartyDummyClient.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F46FF56724780F7F00431386 /* CritPartyDummyClientTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F46FF57F24780F7F00431386 /* Build configuration list for PBXNativeTarget "CritPartyDummyClientTests" */;
+			buildPhases = (
+				F46FF56424780F7F00431386 /* Sources */,
+				F46FF56524780F7F00431386 /* Frameworks */,
+				F46FF56624780F7F00431386 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F46FF56A24780F7F00431386 /* PBXTargetDependency */,
+			);
+			name = CritPartyDummyClientTests;
+			productName = CritPartyDummyClientTests;
+			productReference = F46FF56824780F7F00431386 /* CritPartyDummyClientTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F46FF57224780F7F00431386 /* CritPartyDummyClientUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F46FF58224780F7F00431386 /* Build configuration list for PBXNativeTarget "CritPartyDummyClientUITests" */;
+			buildPhases = (
+				F46FF56F24780F7F00431386 /* Sources */,
+				F46FF57024780F7F00431386 /* Frameworks */,
+				F46FF57124780F7F00431386 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F46FF57524780F7F00431386 /* PBXTargetDependency */,
+			);
+			name = CritPartyDummyClientUITests;
+			productName = CritPartyDummyClientUITests;
+			productReference = F46FF57324780F7F00431386 /* CritPartyDummyClientUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F46FF54D24780F7E00431386 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1100;
+				ORGANIZATIONNAME = "Simon Cozens";
+				TargetAttributes = {
+					F46FF55424780F7E00431386 = {
+						CreatedOnToolsVersion = 11.0;
+					};
+					F46FF56724780F7F00431386 = {
+						CreatedOnToolsVersion = 11.0;
+						TestTargetID = F46FF55424780F7E00431386;
+					};
+					F46FF57224780F7F00431386 = {
+						CreatedOnToolsVersion = 11.0;
+						TestTargetID = F46FF55424780F7E00431386;
+					};
+				};
+			};
+			buildConfigurationList = F46FF55024780F7E00431386 /* Build configuration list for PBXProject "CritPartyDummyClient" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F46FF54C24780F7E00431386;
+			productRefGroup = F46FF55624780F7E00431386 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F46FF55424780F7E00431386 /* CritPartyDummyClient */,
+				F46FF56724780F7F00431386 /* CritPartyDummyClientTests */,
+				F46FF57224780F7F00431386 /* CritPartyDummyClientUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F46FF55324780F7E00431386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F46FF55C24780F7F00431386 /* Assets.xcassets in Resources */,
+				F46FF55F24780F7F00431386 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F46FF56624780F7F00431386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F46FF57124780F7F00431386 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		715201EFB93CE080ABEFF59C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CritPartyDummyClient-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F46FF55124780F7E00431386 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F46FF58724780F8E00431386 /* SignalingClient.m in Sources */,
+				F46FF5942478248600431386 /* RTCSessionDescription+JSON.m in Sources */,
+				F46FF5932478248600431386 /* RTCIceCandidate+JSON.m in Sources */,
+				F46FF56224780F7F00431386 /* main.m in Sources */,
+				F46FF5952478248600431386 /* RTCIceServer+JSON.m in Sources */,
+				F46FF55A24780F7E00431386 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F46FF56424780F7F00431386 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F46FF56D24780F7F00431386 /* CritPartyDummyClientTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F46FF56F24780F7F00431386 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F46FF57824780F7F00431386 /* CritPartyDummyClientUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F46FF56A24780F7F00431386 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F46FF55424780F7E00431386 /* CritPartyDummyClient */;
+			targetProxy = F46FF56924780F7F00431386 /* PBXContainerItemProxy */;
+		};
+		F46FF57524780F7F00431386 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F46FF55424780F7E00431386 /* CritPartyDummyClient */;
+			targetProxy = F46FF57424780F7F00431386 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F46FF55D24780F7F00431386 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F46FF55E24780F7F00431386 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F46FF57A24780F7F00431386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F46FF57B24780F7F00431386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		F46FF57D24780F7F00431386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FAF2F0F870165B08EBD45401 /* Pods-CritPartyDummyClient.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CritPartyDummyClient/CritPartyDummyClient.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = CritPartyDummyClient/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritPartyDummyClient";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F46FF57E24780F7F00431386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 46C93314308571A23AD63F0D /* Pods-CritPartyDummyClient.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CritPartyDummyClient/CritPartyDummyClient.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = CritPartyDummyClient/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritPartyDummyClient";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		F46FF58024780F7F00431386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CritPartyDummyClientTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritPartyDummyClientTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CritPartyDummyClient.app/Contents/MacOS/CritPartyDummyClient";
+			};
+			name = Debug;
+		};
+		F46FF58124780F7F00431386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CritPartyDummyClientTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritPartyDummyClientTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CritPartyDummyClient.app/Contents/MacOS/CritPartyDummyClient";
+			};
+			name = Release;
+		};
+		F46FF58324780F7F00431386 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CritPartyDummyClientUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritPartyDummyClientUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = CritPartyDummyClient;
+			};
+			name = Debug;
+		};
+		F46FF58424780F7F00431386 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CritPartyDummyClientUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritPartyDummyClientUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = CritPartyDummyClient;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F46FF55024780F7E00431386 /* Build configuration list for PBXProject "CritPartyDummyClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F46FF57A24780F7F00431386 /* Debug */,
+				F46FF57B24780F7F00431386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F46FF57C24780F7F00431386 /* Build configuration list for PBXNativeTarget "CritPartyDummyClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F46FF57D24780F7F00431386 /* Debug */,
+				F46FF57E24780F7F00431386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F46FF57F24780F7F00431386 /* Build configuration list for PBXNativeTarget "CritPartyDummyClientTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F46FF58024780F7F00431386 /* Debug */,
+				F46FF58124780F7F00431386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F46FF58224780F7F00431386 /* Build configuration list for PBXNativeTarget "CritPartyDummyClientUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F46FF58324780F7F00431386 /* Debug */,
+				F46FF58424780F7F00431386 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F46FF54D24780F7E00431386 /* Project object */;
+}
