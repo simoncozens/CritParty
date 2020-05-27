@@ -24,6 +24,9 @@ ModeHost,
 @property (weak) IBOutlet NSTextField *sessionID;
 @property (weak) IBOutlet NSButton *beepButton;
 @property (weak) IBOutlet NSWindow *window;
+@property (weak) IBOutlet NSTextField *usernameField;
+@property (unsafe_unretained) IBOutlet NSTextView *textbox;
+
 @end
 
 @implementation AppDelegate {
@@ -58,20 +61,24 @@ ModeHost,
 - (IBAction)connectButton:(id)sender {
     SCLog(@"Session ID: %i", _sessionID.intValue);
     if (! _sessionID.intValue) {
-        _client = [[SignalingClientHost alloc] initWithDelegate:self username:@"host" password:@"abcdefg"];
+        _client = [[SignalingClientHost alloc] initWithDelegate:self username:[_usernameField stringValue] password:@"abcdefg"];
     } else {
         NSString* sid = _sessionID.stringValue;
         [self makeOfferWithCompletion:^void (RTCSessionDescription* offer) {
-            self->_client = [[SignalingClientGuest alloc] initWithDelegate:self username:@"guest" password:@"abcdefg" sessionid:sid offer:offer];
+            self->_client = [[SignalingClientGuest alloc] initWithDelegate:self username:[self->_usernameField stringValue] password:@"abcdefg" sessionid:sid offer:offer];
         }];
     }
 }
 - (IBAction)beep:(id)sender {
+    NSDictionary* message = @{
+        @"from": _client.username,
+        @"message": @"beep"
+    };
     if (hostDataChannel) {
-        [self sendToDataChannel:hostDataChannel data:@{@"Hello": @"world"}];
+        [self sendToDataChannel:hostDataChannel data:message];
     } else {
         for (NSString* user in guestUsers) {
-            [self sendToDataChannel:(RTCDataChannel*)guestUsers[user][@"dataChannel"] data:@{@"Hello": @"world"}];
+            [self sendToDataChannel:(RTCDataChannel*)guestUsers[user][@"dataChannel"] data:message];
         }
     }
 }
@@ -159,12 +166,17 @@ ModeHost,
 
 /// MARK: - Signalling client callbacks (common)
 
-- (void)signalingClient:(nonnull SignalingClient *)client didError:(nonnull NSError *)error {
-}
-
 - (void)signalingClientChannelDidOpen:(nonnull SignalingClient *)client {
     SCLog(@"Connection to signalling server opened");
 }
+
+- (void)signalingClient:(nonnull SignalingClient *)client gotError:(nonnull NSString *)error {
+    NSLog(@"Got error %@", error);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.textbox setString:error];
+    });
+}
+
 
 
 - (void)signalingClient:(nonnull SignalingClient *)client didGetStats:(nonnull NSArray *)stats {
@@ -394,7 +406,18 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
 /// MARK: - Data channel delegates (common)
 
 - (void)dataChannel:(nonnull RTC_OBJC_TYPE(RTCDataChannel) *)dataChannel didReceiveMessageWithBuffer:(nonnull RTC_OBJC_TYPE(RTCDataBuffer) *)buffer {
+    NSDictionary *d = [NSJSONSerialization JSONObjectWithData:[buffer data] options:0 error: nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.textbox setString:[[self.textbox string] stringByAppendingFormat:@"\n%@: %@",d[@"from"], d[@"message"]]];
+     });
     SCLog(@"Got message on data channel");
+    if (!hostPeerConnection) {
+        // Relay to all guests but the originator
+        for (NSString* user in guestUsers) {
+            if ([user isEqualToString:d[@"from"]]) continue;
+                        [self sendToDataChannel:(RTCDataChannel*)guestUsers[user][@"dataChannel"] data:d];
+        }
+    }
 }
 
 - (void)dataChannelDidChangeState:(nonnull RTC_OBJC_TYPE(RTCDataChannel) *)dataChannel {

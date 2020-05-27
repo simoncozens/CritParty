@@ -61,6 +61,9 @@ NSString *url = @"ws://127.0.0.1:9000/";
     if (d[@"type"] && [d[@"type"] isEqual:@"ice-candidate"]) {
         [self gotIceCandidate:d];
     }
+    if (d[@"error"]) {
+        [self gotError:d[@"error"]];
+    }
 
 }
 
@@ -68,6 +71,9 @@ NSString *url = @"ws://127.0.0.1:9000/";
     NSAssert(false, @"Not reached - should call subclass method");
 }
 
+- (void)gotError:(NSDictionary *)d {
+    NSAssert(false, @"Not reached - should call subclass method");
+}
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
 {
     NSLog(@":( Websocket Failed With Error %@", error);
@@ -110,6 +116,10 @@ NSString *url = @"ws://127.0.0.1:9000/";
     [RTC_OBJC_TYPE(RTCSessionDescription) descriptionFromJSONDictionary:d[@"offer"]];
     NSParameterAssert(description.sdp.length);
     [self.delegate signalingClient:self userJoined:d[@"username"] offer:description peerId:d[@"peerid"]];
+}
+
+- (void)gotError:(NSString *)error {
+    [self.delegate signalingClient:self gotError:error];
 }
 
 - (void)gotSessionId:(NSDictionary *)d {
@@ -178,6 +188,10 @@ NSString *url = @"ws://127.0.0.1:9000/";
     };
 
     [self sendMessage:connectstring];
+}
+
+- (void)gotError:(NSString *)error {
+    [self.delegate signalingClient:self gotError:error];
 }
 
 - (void)gotAnswer:(NSDictionary*)d {

@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class SignalingClientGuest;
 
 @protocol SignalingClientDelegate <NSObject>
-- (void)signalingClient:(SignalingClient *)client didError:(NSError *)error;
+- (void)signalingClient:(SignalingClient *)client gotError:(NSString *)error;
 - (void)signalingClientChannelDidOpen:(SignalingClient *)client;
 @end
 
@@ -50,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)newConnection:(NSDictionary*)d;
 - (void)gotSessionId:(NSDictionary*)d;
+- (void)gotError:(NSString*)error;
 
 - (void)sendAnswer:(RTCSessionDescription*)answer withPeerId: (NSString*)peerid;
 - (void)sendIceCandidate:(RTCIceCandidate*)candidate withPeerId: (NSString*)peerid;
@@ -67,6 +68,7 @@ offer: (RTCSessionDescription*)offer;
 
 - (void)sendIceCandidate:(RTCIceCandidate*)candidate;
 - (void)gotAnswer:(NSDictionary*)d;
+- (void)gotError:(NSString*)error;
 @end
 
 NS_ASSUME_NONNULL_END
