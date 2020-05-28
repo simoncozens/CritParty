@@ -9,8 +9,15 @@
 #import <Cocoa/Cocoa.h>
 #import <GlyphsCore/GSFont.h>
 #import <GlyphsCore/GSInstance.h>
+#import <GlyphsCore/GSLayer.h>
+#import <GlyphsCore/GSCallbackHandler.h>
 #import <GlyphsCore/GSFontMaster.h>
 #import <GlyphsCore/GlyphsPluginProtocol.h>
+#import <GlyphsCore/GSGeometrieHelper.h>
+#import <GlyphsCore/GSWindowControllerProtocol.h>
+#import <GlyphsCore/GlyphsToolEventProtocol.h>
+#import <GlyphsCore/GSGlyphViewControllerProtocol.h>
+
 @import WebRTC;
 #include "RTCSessionDescription+JSON.h"
 #include "RTCIceCandidate+JSON.h"

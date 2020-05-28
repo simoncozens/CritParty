@@ -15,7 +15,13 @@
 
 @interface GSDocument : NSDocument
 @property (nonatomic, retain) GSFont* font;
+@property (weak, nonatomic, nullable) NSWindowController<GSWindowControllerProtocol>* windowController;
 @end
+
+@class GSEditViewController;
+@interface GSEditViewController<GSEditViewControllerProtocol> : NSViewController
+@end
+
 
 @implementation CritParty {
     NSMutableDictionary* guestUsers;
@@ -25,6 +31,8 @@
     NSMutableDictionary* answerQueue;
       RTC_OBJC_TYPE(RTCFileLogger) * _fileLogger;
     NSString* myusername;
+    NSMutableDictionary* cursors;
+    unsigned int cursorColor;
 }
 @synthesize factory = _factory;
 
@@ -47,7 +55,12 @@
         answerQueue = [[NSMutableDictionary alloc] init];
         [shareJoinTab setDelegate:self];
         connected = false;
+        cursorColor = 0;
+        cursors = [[NSMutableDictionary alloc] init];
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseMovedNotification" object:nil];
+        [GSCallbackHandler addCallback:self forOperation:@"DrawForeground"];
+
         NSLog(@"Crit party init done");
 	}
 	return self;
@@ -113,6 +126,17 @@
          });
 }
 
+- (NSColor*)getNewCursorColor {
+    switch (++cursorColor % 6) {
+        case 0: return [NSColor redColor];
+        case 1: return [NSColor blueColor];
+        case 2: return [NSColor greenColor];
+        case 3: return [NSColor orangeColor];
+        case 4: return [NSColor yellowColor];
+        case 5: return [NSColor purpleColor];
+    }
+    return [NSColor grayColor];
+}
 
 /// MARK: - Crit Party Implementation
 
@@ -184,6 +208,9 @@
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"glyphsfile"]) {
         NSData* doc = [[NSData alloc] initWithBase64EncodedString:d[@"data"] options:0];
         // XXX Something something readFromData:doc ofType:@"com.schriftgestaltung.glyphs" error:handler
+    } else if (d[@"type"] && [d[@"type"] isEqualToString:@"cursor"]) {
+        [self setCursor:d];
+        if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
     }
 }
 
@@ -202,20 +229,61 @@
     }
 }
 
+- (void) drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
+    if (!connected) { return; }
+    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
+    NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [windowController activeEditViewController];
+
+    for (NSString *username in cursors) {
+        NSLog(@"Drawing cursor %@", cursors[username]);
+
+        NSPoint pt = [cursors[username][@"location"] pointValue];
+        NSImage* c = cursors[username][@"cursor"];
+        CGFloat currentZoom =  [editViewController.graphicView scale];
+
+        [username drawAtPoint:NSMakePoint(pt.x, pt.y-c.size.height*0.5) withAttributes:@{
+            NSFontAttributeName: [NSFont labelFontOfSize:12/currentZoom],
+            NSForegroundColorAttributeName:cursors[username][@"color"]
+        }];
+
+        pt = GSAddPoints(pt, GSScalePoint([[NSCursor arrowCursor] hotSpot],-0.5));
+        [c drawInRect:NSMakeRect(pt.x, pt.y-(c.size.height*0.5/currentZoom), (c.size.width*0.5/currentZoom), (c.size.height*0.5/currentZoom))];
+
+    }
+}
+
+- (void)setCursor:(NSDictionary*)d {
+    NSString* username = d[@"from"];
+    NSPoint pt = NSMakePoint([d[@"x"] floatValue], [d[@"y"] floatValue]);
+    if (!cursors[username]) {
+        cursors[username] = [[NSMutableDictionary alloc] init];
+        cursors[username][@"color"] = [self getNewCursorColor];
+        cursors[username][@"cursor"] = [self makeCursorImageWithColor:cursors[username][@"color"]];
+    }
+    cursors[username][@"location"] = [NSValue valueWithPoint:pt];
+    NSLog(@"Setting cursor %@", cursors[username]);
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"GSRedrawEditView" object:nil];
+}
+
 /// MARK: - Critparty event callbacks
 
 - (void) mouseMoved:(NSNotification*)notification {
     if (!connected) { return; }
     NSEvent* event = [notification object];
-    NSPoint event_location = event.locationInWindow;
-    NSLog(@"Mouse moved: %f, %f", event_location.x, event_location.y);
-//    NSPoint local_point = [self convertPoint:event_location fromView:nil];
+
+    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
+    NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [windowController activeEditViewController];
+    NSPoint Loc = [editViewController.graphicView getActiveLocation: event];
+
+    NSLog(@"Mouse moved: %f, %f", Loc.x, Loc.y);
 
     [self send:@{
         @"from": myusername,
-        @"type": @"mouseMoved",
-        @"x": [NSNumber numberWithFloat: event_location.x ],
-        @"y": [NSNumber numberWithFloat: event_location.y ]
+        @"type": @"cursor",
+        @"x": [NSNumber numberWithFloat: Loc.x ],
+        @"y": [NSNumber numberWithFloat: Loc.y ]
     }];
 }
 
@@ -579,5 +647,29 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
 }
 - (void)dataChannel:(nonnull RTC_OBJC_TYPE(RTCDataChannel) *)dataChannel didChangeBufferedAmount:(uint64_t)amount {
     SCLog(@"Channel changed buffered amount %llu", amount);
+}
+
+- (NSImage*)makeCursorImageWithColor:(NSColor*)newColor {
+       [[NSGraphicsContext currentContext] CIContext];
+       // create the layer with the same color as the text
+       CIFilter *backgroundGenerator=[CIFilter filterWithName:@"CIConstantColorGenerator"];
+        CIColor *color=[[CIColor alloc] initWithColor:newColor];
+       [backgroundGenerator setValue:color forKey:@"inputColor"];
+       CIImage *backgroundImage=[backgroundGenerator valueForKey:@"outputImage"];
+       // create the cursor image
+       CIImage *cursor=[CIImage imageWithData:[[[NSCursor arrowCursor] image] TIFFRepresentation]];
+       CIFilter *filter=[CIFilter filterWithName:@"CIColorInvert"];
+       [filter setValue:cursor forKey:@"inputImage"];
+       CIImage *outputImage=[filter valueForKey:@"outputImage"];
+       // apply a multiply filter
+       filter=[CIFilter filterWithName:@"CIMultiplyCompositing"];
+       [filter setValue:backgroundImage forKey:@"inputImage"];
+       [filter setValue:outputImage forKey:@"inputBackgroundImage"];
+       outputImage=[filter valueForKey:@"outputImage"];
+       // get the NSImage from the CIImage
+       NSCIImageRep *rep=[NSCIImageRep imageRepWithCIImage:outputImage];
+        NSImage *newImage=[[NSImage alloc] initWithSize:[outputImage extent].size];
+       [newImage addRepresentation:rep];
+    return newImage;
 }
 @end
