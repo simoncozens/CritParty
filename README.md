@@ -25,16 +25,16 @@ ID.
 
 # Current state and todo
 
-[x] Establish connection
-[x] Share mouse events
-[ ] Display mouse events
-[ ] Share Glyphs file
-[ ] Receive and open file
-[ ] Share/display path changes
-[ ] Work out what to do when layer changes?
-[ ] Error handling
-[ ] Disconnection
-[ ] Audio/video
+- [x] Establish connection
+- [x] Share mouse events
+- [ ] Display mouse events
+- [ ] Share Glyphs file
+- [ ] Receive and open file
+- [ ] Share/display path changes
+- [ ] Work out what to do when layer changes?
+- [ ] Error handling
+- [ ] Disconnection
+- [ ] Audio/video
 
 # Security
 
