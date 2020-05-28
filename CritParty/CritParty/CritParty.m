@@ -572,6 +572,8 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
         dataChannel.delegate = self;
         if (mode == CritPartyModeHost) {
             [self newConnectionEstablishedForUser:[self getUsernameFor:dataChannel]];
+        } else {
+            [self lockInterface];
         }
     }
 }
