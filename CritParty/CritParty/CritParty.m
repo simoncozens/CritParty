@@ -247,8 +247,8 @@
             NSForegroundColorAttributeName:cursors[username][@"color"]
         }];
 
-        pt = GSAddPoints(pt, GSScalePoint([[NSCursor arrowCursor] hotSpot],-0.5));
-        [c drawInRect:NSMakeRect(pt.x, pt.y-(c.size.height*0.5/currentZoom), (c.size.width*0.5/currentZoom), (c.size.height*0.5/currentZoom))];
+        pt = GSAddPoints(pt, GSScalePoint([[NSCursor arrowCursor] hotSpot],1));
+        [c drawInRect:NSMakeRect(pt.x, pt.y-(c.size.height*0.5*currentZoom), (c.size.width*0.5*currentZoom), (c.size.height*0.5*currentZoom))];
 
     }
 }
