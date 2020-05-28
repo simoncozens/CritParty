@@ -204,8 +204,9 @@
 
 /// MARK: - Critparty event callbacks
 
-- (void) mouseMoved:(NSEvent*)event {
+- (void) mouseMoved:(NSNotification*)notification {
     if (!connected) { return; }
+    NSEvent* event = [notification object];
     NSPoint event_location = event.locationInWindow;
     NSLog(@"Mouse moved: %f, %f", event_location.x, event_location.y);
 //    NSPoint local_point = [self convertPoint:event_location fromView:nil];
