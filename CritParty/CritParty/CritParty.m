@@ -304,7 +304,6 @@
     if (!cursors[username]) {
         cursors[username] = [[NSMutableDictionary alloc] init];
         cursors[username][@"color"] = [self getNewCursorColor];
-        cursors[username][@"cursor"] = [self makeCursorImageWithColor:cursors[username][@"color"]];
     }
     cursors[username][@"location"] = [NSValue valueWithPoint:pt];
     NSLog(@"Setting cursor %@", cursors[username]);
@@ -692,27 +691,17 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
     SCLog(@"Channel changed buffered amount %llu", amount);
 }
 
-- (NSImage*)makeCursorImageWithColor:(NSColor*)newColor {
-       [[NSGraphicsContext currentContext] CIContext];
-       // create the layer with the same color as the text
-       CIFilter *backgroundGenerator=[CIFilter filterWithName:@"CIConstantColorGenerator"];
-        CIColor *color=[[CIColor alloc] initWithColor:newColor];
-       [backgroundGenerator setValue:color forKey:@"inputColor"];
-       CIImage *backgroundImage=[backgroundGenerator valueForKey:@"outputImage"];
-       // create the cursor image
-       CIImage *cursor=[CIImage imageWithData:[[[NSCursor arrowCursor] image] TIFFRepresentation]];
-       CIFilter *filter=[CIFilter filterWithName:@"CIColorInvert"];
-       [filter setValue:cursor forKey:@"inputImage"];
-       CIImage *outputImage=[filter valueForKey:@"outputImage"];
-       // apply a multiply filter
-       filter=[CIFilter filterWithName:@"CIMultiplyCompositing"];
-       [filter setValue:backgroundImage forKey:@"inputImage"];
-       [filter setValue:outputImage forKey:@"inputBackgroundImage"];
-       outputImage=[filter valueForKey:@"outputImage"];
-       // get the NSImage from the CIImage
-       NSCIImageRep *rep=[NSCIImageRep imageRepWithCIImage:outputImage];
-        NSImage *newImage=[[NSImage alloc] initWithSize:[outputImage extent].size];
-       [newImage addRepresentation:rep];
-    return newImage;
+- (NSBezierPath*) arrowCursorPath {
+    NSBezierPath* path = [[NSBezierPath alloc]init];
+    [path moveToPoint:NSMakePoint(0,0)];
+    [path lineToPoint:NSMakePoint(0,-47)];
+    [path lineToPoint:NSMakePoint(11,-35)];
+    [path lineToPoint:NSMakePoint(20,-59)];
+    [path lineToPoint:NSMakePoint(28,-57)];
+    [path lineToPoint:NSMakePoint(18,-33)];
+    [path lineToPoint:NSMakePoint(32,-33)];
+    [path lineToPoint:NSMakePoint(32,-33)];
+    [path closePath];
+    return path;
 }
 @end
