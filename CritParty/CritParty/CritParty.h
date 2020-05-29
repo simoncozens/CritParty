@@ -10,6 +10,7 @@
 #import <GlyphsCore/GSFont.h>
 #import <GlyphsCore/GSInstance.h>
 #import <GlyphsCore/GSLayer.h>
+#import <GlyphsCore/GSPath.h>
 #import <GlyphsCore/GSCallbackHandler.h>
 #import <GlyphsCore/GSFontMaster.h>
 #import <GlyphsCore/GlyphsPluginProtocol.h>
@@ -56,4 +57,5 @@ RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
 @property(nonatomic, strong) RTC_OBJC_TYPE(RTCPeerConnectionFactory) * factory;
 @property(nonatomic, strong) SignalingClient* client;
 
+-(void) sendUpdatedNode:(GSNode*)n;
 @end

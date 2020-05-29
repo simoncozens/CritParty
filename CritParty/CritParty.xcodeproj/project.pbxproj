@@ -19,6 +19,7 @@
 		F47962EB24801CA3006565F7 /* SignalingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E624801CA2006565F7 /* SignalingClient.m */; };
 		F47962EC24801CA3006565F7 /* RTCIceServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E424801CA1006565F7 /* RTCIceServer+JSON.m */; };
 		F47962ED24801CA3006565F7 /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E924801CA3006565F7 /* RTCSessionDescription+JSON.m */; };
+		F49CB8232481376100161313 /* CritParty+Observers.m in Sources */ = {isa = PBXBuildFile; fileRef = F49CB8222481376100161313 /* CritParty+Observers.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,6 +57,8 @@
 		F47962E724801CA2006565F7 /* RTCIceCandidate+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCIceCandidate+JSON.h"; sourceTree = "<group>"; };
 		F47962E824801CA2006565F7 /* RTCIceCandidate+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCIceCandidate+JSON.m"; sourceTree = "<group>"; };
 		F47962E924801CA3006565F7 /* RTCSessionDescription+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCSessionDescription+JSON.m"; sourceTree = "<group>"; };
+		F49CB8212481376100161313 /* CritParty+Observers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CritParty+Observers.h"; sourceTree = "<group>"; };
+		F49CB8222481376100161313 /* CritParty+Observers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CritParty+Observers.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +130,8 @@
 				F47962E224801CA0006565F7 /* SignalingClient.h */,
 				F47962E624801CA2006565F7 /* SignalingClient.m */,
 				F43567C0247F11B100BDF248 /* Supporting Files */,
+				F49CB8212481376100161313 /* CritParty+Observers.h */,
+				F49CB8222481376100161313 /* CritParty+Observers.m */,
 			);
 			path = CritParty;
 			sourceTree = "<group>";
@@ -239,6 +244,7 @@
 				F47962ED24801CA3006565F7 /* RTCSessionDescription+JSON.m in Sources */,
 				F47962EB24801CA3006565F7 /* SignalingClient.m in Sources */,
 				F43567C5247F11B100BDF248 /* CritParty.m in Sources */,
+				F49CB8232481376100161313 /* CritParty+Observers.m in Sources */,
 				F47962EA24801CA3006565F7 /* RTCIceCandidate+JSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,6 +7,7 @@
 //
 
 #import "CritParty.h"
+#import "CritParty+Observers.h"
 #define SCLog(...) NSLog(__VA_ARGS__)
 
 @interface GSApplication : NSApplication
@@ -59,6 +60,7 @@
         cursors = [[NSMutableDictionary alloc] init];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseMovedNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"GSUpdateInterface" object:nil];
         [GSCallbackHandler addCallback:self forOperation:@"DrawForeground"];
 
         NSLog(@"Crit party init done");
@@ -155,7 +157,7 @@
                username:[hostUsernameField stringValue]
                password:[hostPassword stringValue]
                ];
-    
+    [self addObserversToLayer:[self editViewController].activeLayer];
     [self lockInterface];
 }
 
@@ -170,6 +172,8 @@
         self->_client = [[SignalingClientGuest alloc]
                          initWithDelegate:self username:username
                          password:password sessionid:sid offer:offer];
+        [self addObserversToLayer:[self editViewController].activeLayer];
+
     }];
 }
 
@@ -217,6 +221,9 @@
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"cursor"]) {
         [self setCursor:d];
         if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
+    } else if (d[@"type"] && [d[@"type"] isEqualToString:@"node"]) {
+        [self updateNode:d];
+        if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
     }
 }
 
@@ -235,26 +242,58 @@
     }
 }
 
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    NSLog(@"Observer: %@ %@ %@", keyPath, object, change);
+    if ([keyPath isEqualToString:@"position"] && object) {
+        [self sendUpdatedNode:object];
+    }
+}
+
+- (void) sendUpdatedNode:(GSNode*)n {
+    GSPath *p = n.parent;
+    if(!connected) return;
+    [self send: @{
+        @"type": @"node",
+        @"x": [NSNumber numberWithFloat:n.position.x],
+        @"y": [NSNumber numberWithFloat:n.position.y],
+        @"connection": [NSNumber numberWithInt:n.connection],
+        @"index": [NSNumber numberWithUnsignedInteger:[p indexOfNode:n]],
+        @"pathindex":[NSNumber numberWithUnsignedInteger:[p.parent indexOfPath: p]]
+    }];
+}
+- (void) updateNode:(NSDictionary*)d {
+    GSLayer *layer = [self editViewController].activeLayer;
+    if(!layer) return;
+    GSPath *p = [layer pathAtIndex:[d[@"pathindex"] unsignedIntegerValue]];
+    if(!p) return;
+    GSNode *n = [p nodeAtIndex:[d[@"index"] unsignedIntegerValue]];
+    if(!n) return;
+    [n setPositionFast:NSMakePoint([d[@"x"] floatValue],[d[@"y"] floatValue])];
+    [n setConnection:[d[@"connection"] intValue]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[self editViewController] redraw];
+    });
+}
 - (void) drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
     if (!connected) { return; }
-    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
-    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
-    NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [windowController activeEditViewController];
-
     for (NSString *username in cursors) {
 //        NSLog(@"Drawing cursor %@", cursors[username]);
 
         NSPoint pt = [cursors[username][@"location"] pointValue];
-        NSImage* c = cursors[username][@"cursor"];
-        CGFloat currentZoom =  [editViewController.graphicView scale];
-
-        [username drawAtPoint:NSMakePoint(pt.x, pt.y-c.size.height*0.5) withAttributes:@{
+        NSBezierPath *c = [self arrowCursorPath];
+        CGFloat currentZoom =  [[self editViewController].graphicView scale];
+        NSAffineTransform *transform = [NSAffineTransform transform];
+        [transform translateXBy: pt.x yBy: pt.y];
+        [c transformUsingAffineTransform:transform];
+        [cursors[username][@"color"] setFill];
+        
+        [username drawAtPoint:NSMakePoint(pt.x, pt.y-2*c.bounds.size.height) withAttributes:@{
             NSFontAttributeName: [NSFont labelFontOfSize:12/currentZoom],
             NSForegroundColorAttributeName:cursors[username][@"color"]
         }];
-
-        pt = GSAddPoints(pt, GSScalePoint([[NSCursor arrowCursor] hotSpot],1));
-        [c drawInRect:NSMakeRect(pt.x, pt.y-(c.size.height*0.5*currentZoom), (c.size.width*0.5*currentZoom), (c.size.height*0.5*currentZoom))];
+        [c fill];
 
     }
 }
