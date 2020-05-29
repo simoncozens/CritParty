@@ -8,10 +8,13 @@
 
 #import "CritParty.h"
 #import "CritParty+Observers.h"
+#import "CritParty+FontTransfer.h"
+
 #define SCLog(...) NSLog(__VA_ARGS__)
 
 @interface GSApplication : NSApplication
 @property (weak, nonatomic, nullable) GSDocument* currentFontDocument;
+- (GSDocument*)openDocumentWithContentsOfURL:(NSURL*)url display:(bool)display;
 @end
 
 @interface GSDocument : NSDocument
@@ -24,18 +27,7 @@
 @end
 
 
-@implementation CritParty {
-    NSMutableDictionary* guestUsers;
-    NSMutableDictionary* peerIds;
-    RTC_OBJC_TYPE(RTCDataChannel)* hostDataChannel;
-    RTC_OBJC_TYPE(RTCPeerConnection)* hostPeerConnection;
-    NSMutableDictionary* answerQueue;
-      RTC_OBJC_TYPE(RTCFileLogger) * _fileLogger;
-    NSString* myusername;
-    NSMutableDictionary* cursors;
-    unsigned int cursorColor;
-    bool pauseNotifications;
-}
+@implementation CritParty
 @synthesize factory = _factory;
 
 - (id) init {
@@ -55,6 +47,7 @@
         guestUsers = [[NSMutableDictionary alloc] init];
         peerIds = [[NSMutableDictionary alloc] init];
         answerQueue = [[NSMutableDictionary alloc] init];
+        outgoingQueue = [[NSMutableArray alloc] init];
         [shareJoinTab setDelegate:self];
         connected = false;
         cursorColor = 0;
@@ -102,22 +95,27 @@
 
 - (void)lockInterface {
     connected = true;
-    [connectButton setTitle:@"Disconnect"];
-    [hostUsernameField setEnabled:false];
-    [hostPassword setEnabled:false];
-    [guestUsernameField setEnabled:false];
-    [guestPassword setEnabled:false];
-    [guestSessionID setEnabled:false];
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        [self->connectButton setTitle:@"Disconnect"];
+    [self->hostUsernameField setEnabled:false];
+    [self->hostPassword setEnabled:false];
+    [self->guestUsernameField setEnabled:false];
+    [self->guestPassword setEnabled:false];
+    [self->guestSessionID setEnabled:false];
+    });
 }
 
 - (void)unlockInterface {
     connected = false;
-    [connectButton setTitle:@"Connect"];
-    [hostUsernameField setEnabled:true];
-    [hostPassword setEnabled:true];
-    [guestUsernameField setEnabled:true];
-    [guestPassword setEnabled:true];
-    [guestSessionID setEnabled:true];
+    dispatch_async(dispatch_get_main_queue(), ^{
+    [self->connectButton setTitle:@"Connect"];
+    [self->hostUsernameField setEnabled:true];
+    [self->hostPassword setEnabled:true];
+    [self->guestUsernameField setEnabled:true];
+    [self->guestPassword setEnabled:true];
+    [self->guestSessionID setEnabled:true];
+    });
 }
 
 - (BOOL)tabView:(NSTabView *)tabView shouldSelectTabViewItem:(NSTabViewItem *)tabViewItem {
@@ -192,18 +190,10 @@
     
     // Send the glyphs file down their channel
     GSDocument* doc = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
-    // Really this ought to be one chosen in the menu.
     if ([doc isKindOfClass:NSClassFromString(@"GSDocument")]) {
-        // XXX The following line crashes.
-//        NSData *data = [doc dataOfType:@"com.schriftgestaltung.glyphs" error:nil];
-        /*
-        NSDictionary *message = @{
-            @"type": @"glyphsfile",
-            @"owner": myusername,
-            @"data": [data base64EncodedStringWithOptions:0]
-        };
-        [self sendToGuest:username data:message];
-         */
+        GSFont* font = doc.font;
+        // Really this ought to be one chosen in the menu.
+        [self sendFont:font toUsername:username];
     }
 }
 
@@ -222,8 +212,7 @@
             [self sendToEveryone:d];
         }
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"glyphsfile"]) {
-        NSData* doc = [[NSData alloc] initWithBase64EncodedString:d[@"data"] options:0];
-        // XXX Something something readFromData:doc ofType:@"com.schriftgestaltung.glyphs" error:handler
+        [self handleIncomingFontChunk:d];
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"cursor"]) {
         [self setCursor:d];
         if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
@@ -369,7 +358,7 @@
 - (RTCDataChannel*)createDataChannel:(RTCPeerConnection*)pc {
     RTCDataChannelConfiguration* tt = [[RTCDataChannelConfiguration alloc] init];
     tt.maxRetransmits = 30;
-    tt.isOrdered = false;
+    tt.isOrdered = true;
     tt.isNegotiated = false;
     [tt setChannelId:12];
     RTCDataChannel* dc = [pc dataChannelForLabel:@"glyphs" configuration:tt];
@@ -548,7 +537,14 @@ didSetSessionDescriptionWithError:error];
                                         options:NSJSONWritingPrettyPrinted
                                           error:nil];
     RTCDataBuffer* db = [[RTC_OBJC_TYPE(RTCDataBuffer) alloc]initWithData:json isBinary:false];
-    [dc sendData:db];
+    // Set up a queue if we don't have one
+    NSLog(@"This channel is %i, queue count is %lu", dc.channelId, (unsigned long)[outgoingQueue count]);
+    while (dc.channelId >= [outgoingQueue count]) {
+        [outgoingQueue addObject:[[NSMutableArray alloc] init]];
+        NSLog(@"Adding one; channel is %i, queue count is now %lu", dc.channelId, (unsigned long)[outgoingQueue count]);
+    }
+    [outgoingQueue[dc.channelId] addObject:db];
+    [self tryToDrainMessageQueue:dc];
 }
 
 /// MARK: - RTC delegates (common)
@@ -620,8 +616,7 @@ didSetSessionDescriptionWithError:error];
 didSetSessionDescriptionWithError:(NSError *)error {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (error) {
-            RTCLogError(@"Failed to set session description. Error: %@", error);
-            //      [self disconnect];
+            [self handleConnectionError:@"Failed to set session description."];
             return;
         }
         // If we're answering and we've just set the remote offer we need to create
@@ -698,6 +693,18 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
 }
 - (void)dataChannel:(nonnull RTC_OBJC_TYPE(RTCDataChannel) *)dataChannel didChangeBufferedAmount:(uint64_t)amount {
     SCLog(@"Channel changed buffered amount %llu", amount);
+    // Send another message from outgoing queue.
+    [self tryToDrainMessageQueue:dataChannel];
+}
+
+- (void)tryToDrainMessageQueue:(nonnull RTC_OBJC_TYPE(RTCDataChannel) *)dataChannel {
+    if (dataChannel.channelId >= [outgoingQueue count]) return;
+    NSMutableArray* myqueue = outgoingQueue[dataChannel.channelId];
+    while (dataChannel.bufferedAmount < 16 * 1024 && [myqueue count] > 0) {
+        RTCDataBuffer* buf = myqueue.firstObject;
+        [myqueue removeObjectAtIndex:0];
+        [dataChannel sendData:buf];
+    }
 }
 
 - (NSBezierPath*) arrowCursorPath {

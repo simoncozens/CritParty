@@ -28,8 +28,8 @@ ID.
 - [x] Establish connection
 - [x] Share mouse events
 - [x] Display mouse events
-- [ ] Share Glyphs file
-- [ ] Receive and open file
+- [x] Share Glyphs file
+- [x] Receive and open file
 - [ ] Share/display path changes
 - [ ] Work out what to do when layer changes?
 - [ ] Error handling

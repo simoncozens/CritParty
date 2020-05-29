@@ -20,6 +20,7 @@
 		F47962EC24801CA3006565F7 /* RTCIceServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E424801CA1006565F7 /* RTCIceServer+JSON.m */; };
 		F47962ED24801CA3006565F7 /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E924801CA3006565F7 /* RTCSessionDescription+JSON.m */; };
 		F49CB8232481376100161313 /* CritParty+Observers.m in Sources */ = {isa = PBXBuildFile; fileRef = F49CB8222481376100161313 /* CritParty+Observers.m */; };
+		F49CB82624819CC100161313 /* CritParty+FontTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = F49CB82524819CC100161313 /* CritParty+FontTransfer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,8 @@
 		F47962E924801CA3006565F7 /* RTCSessionDescription+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCSessionDescription+JSON.m"; sourceTree = "<group>"; };
 		F49CB8212481376100161313 /* CritParty+Observers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CritParty+Observers.h"; sourceTree = "<group>"; };
 		F49CB8222481376100161313 /* CritParty+Observers.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CritParty+Observers.m"; sourceTree = "<group>"; };
+		F49CB82424819CC100161313 /* CritParty+FontTransfer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CritParty+FontTransfer.h"; sourceTree = "<group>"; };
+		F49CB82524819CC100161313 /* CritParty+FontTransfer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "CritParty+FontTransfer.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,8 @@
 				F43567C0247F11B100BDF248 /* Supporting Files */,
 				F49CB8212481376100161313 /* CritParty+Observers.h */,
 				F49CB8222481376100161313 /* CritParty+Observers.m */,
+				F49CB82424819CC100161313 /* CritParty+FontTransfer.h */,
+				F49CB82524819CC100161313 /* CritParty+FontTransfer.m */,
 			);
 			path = CritParty;
 			sourceTree = "<group>";
@@ -245,6 +250,7 @@
 				F47962EB24801CA3006565F7 /* SignalingClient.m in Sources */,
 				F43567C5247F11B100BDF248 /* CritParty.m in Sources */,
 				F49CB8232481376100161313 /* CritParty+Observers.m in Sources */,
+				F49CB82624819CC100161313 /* CritParty+FontTransfer.m in Sources */,
 				F47962EA24801CA3006565F7 /* RTCIceCandidate+JSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

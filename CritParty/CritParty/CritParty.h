@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <GlyphsCore/GSFont.h>
+#import <GlyphsCore/GSFont+SerialSave.h>
 #import <GlyphsCore/GSInstance.h>
 #import <GlyphsCore/GSLayer.h>
 #import <GlyphsCore/GSPath.h>
@@ -52,10 +53,26 @@ RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
     __weak IBOutlet NSButton *connectButton;
 
      __unsafe_unretained IBOutlet NSTextView *textbox;
+     NSMutableDictionary* guestUsers;
+     NSMutableDictionary* peerIds;
+     RTC_OBJC_TYPE(RTCDataChannel)* hostDataChannel;
+     RTC_OBJC_TYPE(RTCPeerConnection)* hostPeerConnection;
+     NSMutableDictionary* answerQueue;
+     NSMutableArray* outgoingQueue;
+     RTC_OBJC_TYPE(RTCFileLogger) * _fileLogger;
+     NSString* myusername;
+     NSMutableDictionary* cursors;
+     unsigned int cursorColor;
+     bool pauseNotifications;
+     NSURL* incomingFontFile;
+
  }
 
 @property(nonatomic, strong) RTC_OBJC_TYPE(RTCPeerConnectionFactory) * factory;
 @property(nonatomic, strong) SignalingClient* client;
 
 -(void) sendUpdatedNode:(GSNode*)n;
+-(void) sendToGuest:(NSString*)username data:(NSDictionary*)d;
+-(void) handleConnectionError:(NSString*)error;
+- (void)appendMessage:(NSString *)message;
 @end
