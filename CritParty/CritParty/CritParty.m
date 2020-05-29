@@ -138,6 +138,12 @@
     return [NSColor grayColor];
 }
 
+- (NSViewController<GSGlyphEditViewControllerProtocol> *)editViewController {
+    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
+    NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [windowController activeEditViewController];
+    return editViewController;
+}
 /// MARK: - Crit Party Implementation
 
 - (void) beginSharing {
@@ -236,7 +242,7 @@
     NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [windowController activeEditViewController];
 
     for (NSString *username in cursors) {
-        NSLog(@"Drawing cursor %@", cursors[username]);
+//        NSLog(@"Drawing cursor %@", cursors[username]);
 
         NSPoint pt = [cursors[username][@"location"] pointValue];
         NSImage* c = cursors[username][@"cursor"];
@@ -263,7 +269,9 @@
     }
     cursors[username][@"location"] = [NSValue valueWithPoint:pt];
     NSLog(@"Setting cursor %@", cursors[username]);
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"GSRedrawEditView" object:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[self editViewController] redraw];
+    });
 }
 
 /// MARK: - Critparty event callbacks
@@ -272,12 +280,8 @@
     if (!connected) { return; }
     NSEvent* event = [notification object];
 
-    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
-    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
-    NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [windowController activeEditViewController];
-    NSPoint Loc = [editViewController.graphicView getActiveLocation: event];
-
-    NSLog(@"Mouse moved: %f, %f", Loc.x, Loc.y);
+    
+    NSPoint Loc = [[self editViewController].graphicView getActiveLocation: event];
 
     [self send:@{
         @"from": myusername,
