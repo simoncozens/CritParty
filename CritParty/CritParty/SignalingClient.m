@@ -15,6 +15,7 @@
 @implementation SignalingClient {
     @protected SRWebSocket *_socket;
     @protected bool opened;
+    NSMutableArray* messageQueue;
 }
 
 @synthesize password = _password;
@@ -25,12 +26,17 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 - (instancetype)init {
     _socket = [[SRWebSocket alloc] initWithURL:[[NSURL alloc] initWithString:url]];
     _socket.delegate = self;
+    messageQueue = [[NSMutableArray alloc] init];
     opened = false;
     [_socket open]; // We can open socket straight away.
     return self;
 }
 
 - (void)sendMessage:(NSDictionary*)message {
+    if (!opened) {
+        [messageQueue addObject:message];
+        return;
+    };
     NSData *messageJSONObject =
         [NSJSONSerialization dataWithJSONObject:message
                                         options:NSJSONWritingPrettyPrinted
@@ -107,6 +113,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
         @"password": self.password,
         @"username": self.username,
     };
+    opened = true;
     [self sendMessage:connectstring];
 }
 
@@ -190,8 +197,12 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
         @"sessionid": self.sessionid,
         @"offer": [self.offer asDictionary]
     };
-
     [self sendMessage:connectstring];
+    // Drain the message queue
+    for (NSDictionary* d in messageQueue) {
+        [self sendMessage:d];
+    }
+    [messageQueue removeAllObjects];
 }
 
 - (void)gotError:(NSString *)error {
@@ -212,7 +223,6 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 
 - (void)sendIceCandidate:(RTCIceCandidate*)candidate {
     NSLog(@"Sending ICE candidate back to host");
-    if(!opened) { return; } // Too early - we should probably queue it
     NSDictionary* message = @{
         @"type": @"ice-candidate",
         @"candidate": [candidate JSONDictionary]
