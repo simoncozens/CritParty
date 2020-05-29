@@ -65,6 +65,7 @@ RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
      unsigned int cursorColor;
      bool pauseNotifications;
      NSURL* incomingFontFile;
+     GSFont* sharedFont;
 
  }
 
@@ -75,4 +76,5 @@ RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
 -(void) sendToGuest:(NSString*)username data:(NSDictionary*)d;
 -(void) handleConnectionError:(NSString*)error;
 - (void)appendMessage:(NSString *)message;
+- (void) send:(NSDictionary*)d;
 @end

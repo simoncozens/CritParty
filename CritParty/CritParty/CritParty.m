@@ -25,6 +25,9 @@
 @class GSEditViewController;
 @interface GSEditViewController<GSEditViewControllerProtocol> : NSViewController
 @end
+@interface GSTextStorage;
+- (void) setText:(NSAttributedString*)string;
+@end
 
 
 @implementation CritParty
@@ -159,6 +162,9 @@
                username:[hostUsernameField stringValue]
                password:[hostPassword stringValue]
                ];
+    // XXX Should be the one in the list
+    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    sharedFont = currentDocument.font;
     [self addObserversToLayer:[self editViewController].activeLayer];
     [self lockInterface];
 }
@@ -174,8 +180,6 @@
         self->_client = [[SignalingClientGuest alloc]
                          initWithDelegate:self username:username
                          password:password sessionid:sid offer:offer];
-        [self addObserversToLayer:[self editViewController].activeLayer];
-
     }];
 }
 
@@ -189,12 +193,7 @@
     [self sendToEveryone:@{ @"message": message }];
     
     // Send the glyphs file down their channel
-    GSDocument* doc = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
-    if ([doc isKindOfClass:NSClassFromString(@"GSDocument")]) {
-        GSFont* font = doc.font;
-        // Really this ought to be one chosen in the menu.
-        [self sendFont:font toUsername:username];
-    }
+    [self sendFont:sharedFont toUsername:username];
 }
 
 - (void) gotMessage:(NSDictionary*)d {
@@ -213,6 +212,10 @@
         }
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"glyphsfile"]) {
         [self handleIncomingFontChunk:d];
+    } else if (d[@"type"] && [d[@"type"] isEqualToString:@"setuptabs"]) {
+        [self sendTabToUser:d[@"from"]];
+    } else if (d[@"type"] && [d[@"type"] isEqualToString:@"tab"]) {
+        [self setupTab:d];
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"cursor"]) {
         [self setCursor:d];
         if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
@@ -244,6 +247,73 @@
     if ([keyPath isEqualToString:@"position"] && object) {
         [self sendUpdatedNode:object];
     }
+}
+
+- (void) sendTabToUser:(NSString*)username {
+    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
+    NSViewController<GSGlyphEditViewControllerProtocol>* evc =
+    windowController.activeEditViewController;
+    NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
+    NSMutableArray *layers = [[NSMutableArray alloc] init];
+    state[@"activeLayer"] = [evc activeLayer].layerId;
+    state[@"writingDirection"] = [NSNumber numberWithInt:[evc writingDirection]];
+    for (GSLayer* l in evc.allLayers) {
+        UTF32Char inputChar = [currentDocument.font characterForGlyph:l.parent];
+        [layers addObject:@{
+            @"layerId": [l layerId],
+            @"char": [[NSString alloc] initWithBytes:&inputChar length:4 encoding:NSUTF32LittleEndianStringEncoding],
+            @"selected": [NSNumber numberWithBool:[[evc selectedLayers] containsObject:l]]
+        }];
+    }
+    state[@"layers"] = layers;
+    state[@"type"] = @"tab";
+    NSLog(@"Sending tab: %@", state);
+    [self sendToGuest:username data:state];
+}
+
+- (void) setupTab:(NSDictionary*)d {
+    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
+    NSViewController<GSGlyphEditViewControllerProtocol>* evc =
+    windowController.activeEditViewController;
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] init];
+    NSLog(@"Got tab: %@", d);
+
+    NSInteger selected = -1;
+    NSInteger selectedLen = 0;
+    NSInteger i = 0;
+    for (NSDictionary* l in d[@"layers"]) {
+        NSAttributedString *A = [[NSAttributedString alloc] initWithString:l[@"char"] attributes:@{@"GSLayerIdAttrib":l[@"layerId"]}];
+        [string appendAttributedString:A];
+        if([l[@"selected"] boolValue]) {
+            if (selected == -1) {
+                selected = i;
+            }
+            selectedLen++;
+        }
+        i++;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [evc setWritingDirection:[d[@"writingDirection"] intValue]];
+        [[evc.graphicView textStorage] setText:string];
+        // now grab the layers and find the right one
+        NSArray* layers = [evc allLayers];
+        NSInteger i = 0;
+        for (GSLayer* l in layers) {
+            if ([[l layerId] isEqualTo: d[@"activeLayer"]]) {
+                [evc.graphicView setActiveLayer:l];
+            }
+            i++;
+            if (i >= selected && i < selected+selectedLen) {
+                [self addObserversToLayer:l];
+            }
+        }
+        [evc forceRedraw];
+        NSLog(@"Setting layer range to %li,%li", selected, selectedLen);
+        [evc.graphicView setSelectedLayerRange:NSMakeRange(selected, selectedLen)];
+        [evc forceRedraw];
+    });
 }
 
 - (void) sendUpdatedNode:(GSNode*)n {
