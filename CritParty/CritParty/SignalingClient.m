@@ -32,6 +32,9 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
     return self;
 }
 
+- (void)disconnect {
+    [_socket close];
+}
 - (void)sendMessage:(NSDictionary*)message {
     if (!opened) {
         [messageQueue addObject:message];

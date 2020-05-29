@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic) NSString* username;
 @property(nonatomic) NSString* password;
 - (void)gotIceCandidate:(NSDictionary*) d;
+- (void)disconnect;
 @end
 
 @interface SignalingClientHost : SignalingClient

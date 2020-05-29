@@ -27,7 +27,7 @@ ID.
 
 - [x] Establish connection
 - [x] Share mouse events
-- [ ] Display mouse events
+- [x] Display mouse events
 - [ ] Share Glyphs file
 - [ ] Receive and open file
 - [ ] Share/display path changes

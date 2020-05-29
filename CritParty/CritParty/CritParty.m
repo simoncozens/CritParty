@@ -34,6 +34,7 @@
     NSString* myusername;
     NSMutableDictionary* cursors;
     unsigned int cursorColor;
+    bool pauseNotifications;
 }
 @synthesize factory = _factory;
 
@@ -58,8 +59,11 @@
         connected = false;
         cursorColor = 0;
         cursors = [[NSMutableDictionary alloc] init];
+        pauseNotifications = false;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseMovedNotification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseDraggedNotification" object:nil];
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"GSUpdateInterface" object:nil];
         [GSCallbackHandler addCallback:self forOperation:@"DrawForeground"];
 
@@ -178,7 +182,9 @@
 }
 
 - (void) newConnectionEstablishedForUser:(NSString*) username {
-    NSParameterAssert(guestUsers[username]);
+    if(!guestUsers[username]) {
+        [self handleConnectionError:@"Lost track of who just joined"];
+    }
     NSString* message = [username stringByAppendingString:@" has joined"];
     [self appendMessage:message];
     // Tell others.
@@ -253,7 +259,7 @@
 
 - (void) sendUpdatedNode:(GSNode*)n {
     GSPath *p = n.parent;
-    if(!connected) return;
+    if(!connected || pauseNotifications) return;
     [self send: @{
         @"type": @"node",
         @"x": [NSNumber numberWithFloat:n.position.x],
@@ -270,8 +276,10 @@
     if(!p) return;
     GSNode *n = [p nodeAtIndex:[d[@"index"] unsignedIntegerValue]];
     if(!n) return;
-    [n setPositionFast:NSMakePoint([d[@"x"] floatValue],[d[@"y"] floatValue])];
+    pauseNotifications = true;
+    [n setPosition:NSMakePoint([d[@"x"] floatValue],[d[@"y"] floatValue])];
     [n setConnection:[d[@"connection"] intValue]];
+    pauseNotifications = false;
     dispatch_async(dispatch_get_main_queue(), ^{
         [[self editViewController] redraw];
     });
@@ -329,6 +337,15 @@
     }];
 }
 
+- (void)handleConnectionError:(NSString*)error {
+    NSLog(@"Got error %@", error);
+    [self.client disconnect];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self->textbox setString:error];
+        self->connected = false;
+        [self unlockInterface];
+    });
+}
 /// MARK: - Host peer-to-peer administration
 
 - (RTCPeerConnection*)createPeerConnection {
@@ -437,17 +454,7 @@
 }
 
 - (void)signalingClient:(nonnull SignalingClient *)client gotError:(nonnull NSString *)error {
-    NSLog(@"Got error %@", error);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self->textbox setString:error];
-        self->connected = false;
-        [self unlockInterface];
-    });
-}
-
-
-
-- (void)signalingClient:(nonnull SignalingClient *)client didGetStats:(nonnull NSArray *)stats {
+    [self handleConnectionError:error];
 }
 
 /// MARK: - Signalling client callbacks (host)
@@ -559,7 +566,9 @@ didSetSessionDescriptionWithError:error];
     if (newState == RTCIceGatheringStateComplete && peerConnection != hostPeerConnection) {
         // Find this PC in answer queue and send.
         NSDictionary* entry = answerQueue[[peerConnection description]];
-        NSAssert(entry, @"Have answer for this peer");
+        if (!entry) {
+            return; // Don't know who *that* was
+        }
         RTCSessionDescription* sdp = entry[@"answer"];
         NSString *peerId = entry[@"peerId"];
         [(SignalingClientHost*)(self.client) sendAnswer:sdp withPeerId: peerId];
