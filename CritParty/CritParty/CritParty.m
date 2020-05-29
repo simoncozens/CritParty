@@ -314,8 +314,7 @@
 - (void) mouseMoved:(NSNotification*)notification {
     if (!connected) { return; }
     NSEvent* event = [notification object];
-
-    
+    if (![event isKindOfClass:[NSEvent class]]) { return; }
     NSPoint Loc = [[self editViewController].graphicView getActiveLocation: event];
 
     [self send:@{
