@@ -14,16 +14,18 @@
 
 @implementation SignalingClient {
     @protected SRWebSocket *_socket;
+    @protected bool opened;
 }
 
 @synthesize password = _password;
 @synthesize username = _username;
 
-NSString *url = @"ws://127.0.0.1:9000/";
+NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 
 - (instancetype)init {
     _socket = [[SRWebSocket alloc] initWithURL:[[NSURL alloc] initWithString:url]];
     _socket.delegate = self;
+    opened = false;
     [_socket open]; // We can open socket straight away.
     return self;
 }
@@ -77,6 +79,7 @@ NSString *url = @"ws://127.0.0.1:9000/";
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
 {
     NSLog(@":( Websocket Failed With Error %@", error);
+    [self gotError:@{@"ok": @"false", @"error": [error description]}];
 }
 
 @end
@@ -179,6 +182,7 @@ NSString *url = @"ws://127.0.0.1:9000/";
     NSAssert(self.username, @"Username exists");
     NSAssert(self.password, @"Password exists");
     NSAssert(self.offer, @"Offer exists");
+    opened = true;
     NSDictionary* connectstring = @{
         @"type": @"joinsession",
         @"password": self.password,
@@ -208,6 +212,7 @@ NSString *url = @"ws://127.0.0.1:9000/";
 
 - (void)sendIceCandidate:(RTCIceCandidate*)candidate {
     NSLog(@"Sending ICE candidate back to host");
+    if(!opened) { return; } // Too early - we should probably queue it
     NSDictionary* message = @{
         @"type": @"ice-candidate",
         @"candidate": [candidate JSONDictionary]

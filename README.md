@@ -8,8 +8,8 @@ Need to start up signalling server before doing anything:
 
 Signalling server runs on port 9000 by default and binds to all IPs.
 
-Signalling server URL is set in CritParty/SignallingClient.m - currently
-set to localhost, so to run across a network, set to something sensible.
+Signalling server URL is set in CritParty/SignallingClient.m. I'm
+running the server on my host.
 
 # To use
 
