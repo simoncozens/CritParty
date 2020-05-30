@@ -12,6 +12,7 @@
 #import <GlyphsCore/GSInstance.h>
 #import <GlyphsCore/GSLayer.h>
 #import <GlyphsCore/GSPath.h>
+#import <GlyphsCore/GSGlyph.h>
 #import <GlyphsCore/GSCallbackHandler.h>
 #import <GlyphsCore/GSFontMaster.h>
 #import <GlyphsCore/GlyphsPluginProtocol.h>
@@ -72,9 +73,9 @@ RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
 @property(nonatomic, strong) RTC_OBJC_TYPE(RTCPeerConnectionFactory) * factory;
 @property(nonatomic, strong) SignalingClient* client;
 
--(void) sendUpdatedNode:(GSNode*)n;
 -(void) sendToGuest:(NSString*)username data:(NSDictionary*)d;
 -(void) handleConnectionError:(NSString*)error;
 - (void)appendMessage:(NSString *)message;
 - (void) send:(NSDictionary*)d;
+- (NSViewController<GSGlyphEditViewControllerProtocol> *)editViewController;
 @end

@@ -17,6 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(void) addObserversToLayer:(GSLayer*)l;
 -(void) addObserversToPath:(GSPath*)p;
 -(void) addObserversToNode:(GSNode*)n;
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context;
+-(void) sendUpdatedNode:(GSNode*)n;
+-(void) updatePath:(NSDictionary*)d;
+-(void) updateNode:(NSDictionary*)d;
+- (void) updateLayer:(NSDictionary*)d;
 @end
 
 NS_ASSUME_NONNULL_END

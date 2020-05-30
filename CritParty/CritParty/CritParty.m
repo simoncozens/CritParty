@@ -197,7 +197,7 @@
 }
 
 - (void) gotMessage:(NSDictionary*)d {
-    SCLog(@"Got message on data channel");
+//    SCLog(@"Got message on data channel");
     if (d[@"message"]) {
         NSString* msg;
         if (d[@"from"]) {
@@ -220,12 +220,26 @@
         [self setCursor:d];
         if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"node"]) {
-        [self updateNode:d];
+        if (! ([d[@"from"] isEqualToString: myusername])) {
+            [self updateNode:d];
+        }
+        if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
+    } else if (d[@"type"] && [d[@"type"] isEqualToString:@"path"]) {
+        if (! ([d[@"from"] isEqualToString: myusername])) {
+            [self updatePath:d];
+        }
+        if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
+    } else if (d[@"type"] && [d[@"type"] isEqualToString:@"layer"]) {
+        if (! ([d[@"from"] isEqualToString: myusername])) {
+            [self updateLayer:d];
+        }
         if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
     }
+
 }
 
 - (void) send:(NSDictionary*)d {
+    SCLog(@"Sending: %@", d);
     if (mode == CritPartyModeHost) {
         [self sendToEveryone:d];
     } else {
@@ -237,15 +251,6 @@
     for (NSString* user in guestUsers) {
         if ([user isEqualToString:d[@"from"]]) continue;
         [self sendToGuest:user data:d];
-    }
-}
-
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    NSLog(@"Observer: %@ %@ %@", keyPath, object, change);
-    if ([keyPath isEqualToString:@"position"] && object) {
-        [self sendUpdatedNode:object];
     }
 }
 
@@ -304,10 +309,10 @@
             if ([[l layerId] isEqualTo: d[@"activeLayer"]]) {
                 [evc.graphicView setActiveLayer:l];
             }
-            i++;
             if (i >= selected && i < selected+selectedLen) {
                 [self addObserversToLayer:l];
             }
+            i++;
         }
         [evc forceRedraw];
         NSLog(@"Setting layer range to %li,%li", selected, selectedLen);
@@ -316,33 +321,6 @@
     });
 }
 
-- (void) sendUpdatedNode:(GSNode*)n {
-    GSPath *p = n.parent;
-    if(!connected || pauseNotifications) return;
-    [self send: @{
-        @"type": @"node",
-        @"x": [NSNumber numberWithFloat:n.position.x],
-        @"y": [NSNumber numberWithFloat:n.position.y],
-        @"connection": [NSNumber numberWithInt:n.connection],
-        @"index": [NSNumber numberWithUnsignedInteger:[p indexOfNode:n]],
-        @"pathindex":[NSNumber numberWithUnsignedInteger:[p.parent indexOfPath: p]]
-    }];
-}
-- (void) updateNode:(NSDictionary*)d {
-    GSLayer *layer = [self editViewController].activeLayer;
-    if(!layer) return;
-    GSPath *p = [layer pathAtIndex:[d[@"pathindex"] unsignedIntegerValue]];
-    if(!p) return;
-    GSNode *n = [p nodeAtIndex:[d[@"index"] unsignedIntegerValue]];
-    if(!n) return;
-    pauseNotifications = true;
-    [n setPosition:NSMakePoint([d[@"x"] floatValue],[d[@"y"] floatValue])];
-    [n setConnection:[d[@"connection"] intValue]];
-    pauseNotifications = false;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[self editViewController] redraw];
-    });
-}
 - (void) drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
     if (!connected) { return; }
     for (NSString *username in cursors) {
@@ -373,7 +351,7 @@
         cursors[username][@"color"] = [self getNewCursorColor];
     }
     cursors[username][@"location"] = [NSValue valueWithPoint:pt];
-    NSLog(@"Setting cursor %@", cursors[username]);
+//    NSLog(@"Setting cursor %@", cursors[username]);
     dispatch_async(dispatch_get_main_queue(), ^{
         [[self editViewController] redraw];
     });
@@ -607,10 +585,8 @@ didSetSessionDescriptionWithError:error];
                                           error:nil];
     RTCDataBuffer* db = [[RTC_OBJC_TYPE(RTCDataBuffer) alloc]initWithData:json isBinary:false];
     // Set up a queue if we don't have one
-    NSLog(@"This channel is %i, queue count is %lu", dc.channelId, (unsigned long)[outgoingQueue count]);
     while (dc.channelId >= [outgoingQueue count]) {
         [outgoingQueue addObject:[[NSMutableArray alloc] init]];
-        NSLog(@"Adding one; channel is %i, queue count is now %lu", dc.channelId, (unsigned long)[outgoingQueue count]);
     }
     [outgoingQueue[dc.channelId] addObject:db];
     [self tryToDrainMessageQueue:dc];
@@ -761,7 +737,7 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
     }
 }
 - (void)dataChannel:(nonnull RTC_OBJC_TYPE(RTCDataChannel) *)dataChannel didChangeBufferedAmount:(uint64_t)amount {
-    SCLog(@"Channel changed buffered amount %llu", amount);
+//    SCLog(@"Channel changed buffered amount %llu", amount);
     // Send another message from outgoing queue.
     [self tryToDrainMessageQueue:dataChannel];
 }
