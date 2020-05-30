@@ -26,10 +26,14 @@
 -(void) addObserversToLayer:(GSLayer*)l {
     @try {
         [l removeObserver:self forKeyPath:@"paths"];
+        [l removeObserver:self forKeyPath:@"anchors"];
+        [l removeObserver:self forKeyPath:@"LSB"];
+        [l removeObserver:self forKeyPath:@"RSB"];
     } @catch (NSException * __unused exception) {} // Horrible
     [l addObserver:self forKeyPath:@"paths" options:0 context:nil];
     [l addObserver:self forKeyPath:@"anchors" options:0 context:nil];
-
+    [l addObserver:self forKeyPath:@"LSB" options:0 context:nil];
+    [l addObserver:self forKeyPath:@"RSB" options:0 context:nil];
     GSPath* p;
     for (p in l.paths) {
         [self addObserversToPath:p];
@@ -100,7 +104,11 @@
         [self sendUpdatedPath:object];
         return;
     }
-    if ([keyPath isEqualToString:@"paths"] || [keyPath isEqualToString:@"anchors"]) {
+    if ([keyPath isEqualToString:@"paths"] ||
+        [keyPath isEqualToString:@"anchors"] ||
+        [keyPath isEqualToString:@"LSB"] ||
+        [keyPath isEqualToString:@"RSB"]
+        ) {
         [self sendUpdatedLayer:object];
         return;
     }
@@ -267,6 +275,12 @@
 
 - (void) sendUpdatedEditView {
     if(!connected || pauseNotifications) return;
-    [self send: [self editViewInformation]];
+    // This is looping horribly. :-(
+    // For the sake of simplicity, let's say only the HOST can change edit view
+    if (mode == CritPartyModeHost) {
+        [self send: [self editViewInformation]];
+        [self addObserversToLayer:[self editViewController].activeLayer];
+        [self addObserversToGraphicView:[self editViewController].graphicView];
+    }
 }
 @end

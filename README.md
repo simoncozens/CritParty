@@ -30,8 +30,8 @@ ID.
 - [x] Display mouse events
 - [x] Share Glyphs file
 - [x] Receive and open file
-- [ ] Share/display path changes
-- [ ] Work out what to do when layer changes?
+- [x] Share/display path changes
+- [x] Work out what to do when layer changes?
 - [ ] Error handling
 - [ ] Disconnection
 - [ ] Audio/video
