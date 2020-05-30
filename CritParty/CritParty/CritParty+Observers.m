@@ -177,15 +177,15 @@
 - (void) updatePath:(NSDictionary*)d {
     GSLayer *layer = [self editViewController].activeLayer;
     if(!layer) return;
-    NSUInteger pathIndex = [d[@"pathindex"] unsignedIntegerValue];
-    pauseNotifications = true;
-    [layer removePathAtIndex:pathIndex];
-    GSPath *p = [[GSPath alloc] initWithPathDict:d[@"pathDict"]];
-    [self addObserversToPath:p];
-    [layer insertPath:p atIndex:pathIndex];
-    pauseNotifications = false;
-    NSLog(@"Constructed a path %@", p);
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSUInteger pathIndex = [d[@"pathindex"] unsignedIntegerValue];
+        self->pauseNotifications = true;
+        [layer removePathAtIndex:pathIndex];
+        GSPath *p = [[GSPath alloc] initWithPathDict:d[@"pathDict"]];
+        [self addObserversToPath:p];
+        [layer insertPath:p atIndex:pathIndex];
+        self->pauseNotifications = false;
+        NSLog(@"Constructed a path %@", p);
         [[self editViewController] redraw];
     });
 }
@@ -194,14 +194,21 @@
     NSLog(@"Updating layer");
     GSLayer *layer = [self editViewController].activeLayer;
     if(!layer) return;
-    GSGlyph *g = layer.parent;
-    pauseNotifications = true;
-    GSLayer *newLayer = [[GSLayer alloc] initWithLayerDict:d[@"layerDict"]];
-    [self addObserversToLayer:newLayer];
-    [g setLayer:newLayer forKey:d[@"layerId"]];
-    NSLog(@"Constructed a layer %@ (paths %lu)", [newLayer layerDict], (unsigned long)[newLayer countOfPaths]);
-    pauseNotifications = false;
     dispatch_async(dispatch_get_main_queue(), ^{
+        self->pauseNotifications = true;
+        GSLayer *newLayer = [[GSLayer alloc] initWithLayerDict:d[@"layerDict"]];
+    //    GSGlyph *g = layer.parent;
+        //    [self addObserversToLayer:newLayer];
+    //    [g setLayer:newLayer forKey:d[@"layerId"]];
+    //    NSLog(@"Constructed a layer %@ (paths %lu)", [newLayer layerDict], (unsigned long)[newLayer countOfPaths]);
+        layer.paths = newLayer.paths;
+        layer.anchors = newLayer.anchors;
+        layer.annotations = newLayer.annotations;
+        layer.LSB = newLayer.LSB;
+        layer.RSB = newLayer.RSB;
+        [self addObserversToLayer:layer];
+        self->pauseNotifications = false;
+    //    [self send:@{@"type":@"setuptabs", @"from": myusername}];
         [[self editViewController] redraw];
     });
 }
@@ -237,10 +244,10 @@
     if(!p) return;
     GSNode *n = [p nodeAtIndex:[d[@"index"] unsignedIntegerValue]];
     if(!n) return;
-    pauseNotifications = true;
-    [self updateNode:n fromDictionary:d];
-    pauseNotifications = false;
     dispatch_async(dispatch_get_main_queue(), ^{
+        self->pauseNotifications = true;
+        [self updateNode:n fromDictionary:d];
+        self->pauseNotifications = false;
         [[self editViewController] redraw];
     });
 }
