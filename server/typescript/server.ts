@@ -164,6 +164,24 @@ wss.on("connection", function(ws) {
 			console.log("");
 		}
 	});
+	ws.on("close", msg => {
+		if (!connection.session) { return; }
+		let username = connection.username;
+		let session = connection.session;
+		if (connection == session.host) {
+			// Notify all users
+			for (var c of session.guests) {
+				sendTo(c, { "type": "shutdown" })
+				c.socket.close();
+			}
+			delete sessions[session.sessionId];
+		} else {
+			// Notify host
+			sendTo(session.host, { "type": "connectionclosed", "username": username })
+			// Remove this person from the session users
+			session.guests = session.guests.filter( (c) => c.username != username);
+		}
+	});
 })
 
 console.log("Listening")
