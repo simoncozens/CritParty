@@ -197,7 +197,7 @@
 }
 
 - (void) gotMessage:(NSDictionary*)d {
-//    SCLog(@"Got message on data channel");
+    SCLog(@"Got message on data channel %@", d);
     if (d[@"message"]) {
         NSString* msg;
         if (d[@"from"]) {
@@ -224,12 +224,18 @@
             [self updateNode:d];
         }
         if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
+    } else if (d[@"type"] && [d[@"type"] isEqualToString:@"anchor"]) {
+        if (! ([d[@"from"] isEqualToString: myusername])) {
+            [self updateAnchor:d];
+        }
+        if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"path"]) {
         if (! ([d[@"from"] isEqualToString: myusername])) {
             [self updatePath:d];
         }
         if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
     } else if (d[@"type"] && [d[@"type"] isEqualToString:@"layer"]) {
+        NSLog(@"Got a layer from %@", d[@"from"]);
         if (! ([d[@"from"] isEqualToString: myusername])) {
             [self updateLayer:d];
         }
@@ -261,7 +267,7 @@
     windowController.activeEditViewController;
     NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
     NSMutableArray *layers = [[NSMutableArray alloc] init];
-    state[@"activeLayer"] = [evc activeLayer].layerId;
+    state[@"activeIndex"] = [NSNumber numberWithUnsignedLong:[evc.graphicView activeIndex]];
     state[@"writingDirection"] = [NSNumber numberWithInt:[evc writingDirection]];
     for (GSLayer* l in evc.allLayers) {
         UTF32Char inputChar = [currentDocument.font characterForGlyph:l.parent];
@@ -286,6 +292,8 @@
     NSLog(@"Got tab: %@", d);
 
     NSInteger selected = -1;
+    unsigned long activeIndex = [d[@"activeIndex"] unsignedLongValue];
+
     NSInteger selectedLen = 0;
     NSInteger i = 0;
     for (NSDictionary* l in d[@"layers"]) {
@@ -305,9 +313,12 @@
         // now grab the layers and find the right one
         NSArray* layers = [evc allLayers];
         NSInteger i = 0;
+        NSLog(@"Setting layer range to %li,%li", selected, selectedLen);
+        [evc.graphicView setSelectedLayerRange:NSMakeRange(selected, selectedLen)];
         for (GSLayer* l in layers) {
-            if ([[l layerId] isEqualTo: d[@"activeLayer"]]) {
+            if (i == activeIndex) {
                 [evc.graphicView setActiveLayer:l];
+                [evc.graphicView setActiveIndex:i];
             }
             if (i >= selected && i < selected+selectedLen) {
                 [self addObserversToLayer:l];
@@ -315,8 +326,6 @@
             i++;
         }
         [evc forceRedraw];
-        NSLog(@"Setting layer range to %li,%li", selected, selectedLen);
-        [evc.graphicView setSelectedLayerRange:NSMakeRange(selected, selectedLen)];
         [evc forceRedraw];
     });
 }

@@ -18,10 +18,17 @@
         [l removeObserver:self forKeyPath:@"paths"];
     } @catch (NSException * __unused exception) {} // Horrible
     [l addObserver:self forKeyPath:@"paths" options:0 context:nil];
+    [l addObserver:self forKeyPath:@"anchors" options:0 context:nil];
+
     GSPath* p;
     for (p in l.paths) {
         [self addObserversToPath:p];
     }
+
+    for (NSString* anchorName in l.anchors) {
+        [self addObserversToAnchor:l.anchors[anchorName]];
+    }
+
 }
 
 -(void) addObserversToPath:(GSPath*)p {
@@ -48,6 +55,15 @@
     [n addObserver:self forKeyPath:@"position" options:0 context:nil];
 }
 
+-(void) addObserversToAnchor:(GSAnchor*)a {
+    NSLog(@"Adding obsrerver to anchor %@", a);
+    @try {
+        [a removeObserver:self forKeyPath:@"position"];
+    }@ catch (NSException * __unused exception) {} // Horrible
+    [a addObserver:self forKeyPath:@"type" options:0 context:nil];
+    [a addObserver:self forKeyPath:@"name" options:0 context:nil];
+    [a addObserver:self forKeyPath:@"position" options:0 context:nil];
+}
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
@@ -59,11 +75,21 @@
         [self sendUpdatedNode:object];
         return;
     }
+    if ([object isKindOfClass:[GSAnchor class]]) {
+        if ([keyPath isEqualToString:@"position"]) {
+            [self sendUpdatedAnchor:object];
+        } else {
+            // Just send the layer
+            [self sendUpdatedLayer:((GSAnchor*)object).parent];
+        }
+        return;
+    }
+
     if ([keyPath isEqualToString:@"nodes"]) {
         [self sendUpdatedPath:object];
         return;
     }
-    if ([keyPath isEqualToString:@"paths"]) {
+    if ([keyPath isEqualToString:@"paths"] || [keyPath isEqualToString:@"anchors"]) {
         [self sendUpdatedLayer:object];
         return;
     }
@@ -80,6 +106,16 @@
         @"nodetype": [NSNumber numberWithInt:n.type],
         @"index": [NSNumber numberWithUnsignedInteger:[p indexOfNode:n]],
         @"pathindex":[NSNumber numberWithUnsignedInteger:[p.parent indexOfPath: p]]
+    };
+}
+
+- (NSDictionary*)anchorAsDictionary:(GSAnchor*)a {
+    return @{
+        @"from": myusername,
+        @"type": @"anchor",
+        @"x": [NSNumber numberWithFloat:a.position.x],
+        @"y": [NSNumber numberWithFloat:a.position.y],
+        @"name": [a name]
     };
 }
 
@@ -131,6 +167,7 @@
 }
 
 - (void) updateLayer:(NSDictionary*)d {
+    NSLog(@"Updating layer");
     GSLayer *layer = [self editViewController].activeLayer;
     if(!layer) return;
     GSGlyph *g = layer.parent;
@@ -144,6 +181,26 @@
         [[self editViewController] redraw];
     });
 }
+
+- (void) sendUpdatedAnchor:(GSAnchor*)a {
+    if(!connected || pauseNotifications) return;
+    [self send: [self anchorAsDictionary:a]];
+}
+
+- (void) updateAnchor:(NSDictionary*)d {
+    GSLayer *layer = [self editViewController].activeLayer;
+    if(!layer) return;
+    GSAnchor *a = [layer anchorForName:d[@"name"]];
+    if (!a) return;
+    pauseNotifications = true;
+    // Any other properties will be changed via a layer update
+    [a setPosition:NSMakePoint([d[@"x"] floatValue],[d[@"y"] floatValue])];
+    pauseNotifications = false;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[self editViewController] redraw];
+    });
+}
+
 - (void) sendUpdatedNode:(GSNode*)n {
     if(!connected || pauseNotifications) return;
     [self send: [self nodeAsDictionary:n]];

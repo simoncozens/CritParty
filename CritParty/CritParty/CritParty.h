@@ -12,6 +12,7 @@
 #import <GlyphsCore/GSInstance.h>
 #import <GlyphsCore/GSLayer.h>
 #import <GlyphsCore/GSPath.h>
+#import <GlyphsCore/GSAnchor.h>
 #import <GlyphsCore/GSGlyph.h>
 #import <GlyphsCore/GSCallbackHandler.h>
 #import <GlyphsCore/GSFontMaster.h>

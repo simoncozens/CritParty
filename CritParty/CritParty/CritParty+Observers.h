@@ -21,7 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void) sendUpdatedNode:(GSNode*)n;
 -(void) updatePath:(NSDictionary*)d;
 -(void) updateNode:(NSDictionary*)d;
-- (void) updateLayer:(NSDictionary*)d;
+-(void) updateAnchor:(NSDictionary*)d;
+-(void) updateLayer:(NSDictionary*)d;
 @end
 
 NS_ASSUME_NONNULL_END
