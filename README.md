@@ -1,15 +1,8 @@
 # Signalling server
 
-Need to start up signalling server before doing anything:
-
-* cd server
-* npm install
-* node js/server.js
-
-Signalling server runs on port 9000 by default and binds to all IPs.
-
 Signalling server URL is set in CritParty/SignallingClient.m. I'm
-running the server on my host.
+running the server on my host. I'm also running a STUN server there
+too.
 
 # To use
 
