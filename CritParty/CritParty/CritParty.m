@@ -12,26 +12,10 @@
 
 #define SCLog(...) NSLog(__VA_ARGS__)
 
-@interface GSApplication : NSApplication
-@property (weak, nonatomic, nullable) GSDocument* currentFontDocument;
-- (GSDocument*)openDocumentWithContentsOfURL:(NSURL*)url display:(bool)display;
-@end
-
-@interface GSDocument : NSDocument
-@property (nonatomic, retain) GSFont* font;
-@property (weak, nonatomic, nullable) NSWindowController<GSWindowControllerProtocol>* windowController;
-@end
-
-@class GSEditViewController;
-@interface GSEditViewController<GSEditViewControllerProtocol> : NSViewController
-@end
-@interface GSTextStorage;
-- (void) setText:(NSAttributedString*)string;
-@end
-
-
 @implementation CritParty
 @synthesize factory = _factory;
+
+NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
 
 - (id) init {
     NSArray *arrayOfStuff;
@@ -166,6 +150,7 @@
     GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
     sharedFont = currentDocument.font;
     [self addObserversToLayer:[self editViewController].activeLayer];
+    [self addObserversToGraphicView:[self editViewController].graphicView];
     [self lockInterface];
 }
 
@@ -261,29 +246,14 @@
 }
 
 - (void) sendTabToUser:(NSString*)username {
-    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
-    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
-    NSViewController<GSGlyphEditViewControllerProtocol>* evc =
-    windowController.activeEditViewController;
-    NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
-    NSMutableArray *layers = [[NSMutableArray alloc] init];
-    state[@"activeIndex"] = [NSNumber numberWithUnsignedLong:[evc.graphicView activeIndex]];
-    state[@"writingDirection"] = [NSNumber numberWithInt:[evc writingDirection]];
-    for (GSLayer* l in evc.allLayers) {
-        UTF32Char inputChar = [currentDocument.font characterForGlyph:l.parent];
-        [layers addObject:@{
-            @"layerId": [l layerId],
-            @"char": [[NSString alloc] initWithBytes:&inputChar length:4 encoding:NSUTF32LittleEndianStringEncoding],
-            @"selected": [NSNumber numberWithBool:[[evc selectedLayers] containsObject:l]]
-        }];
-    }
-    state[@"layers"] = layers;
-    state[@"type"] = @"tab";
+    NSDictionary* state = [self editViewInformation];
     NSLog(@"Sending tab: %@", state);
     [self sendToGuest:username data:state];
 }
 
 - (void) setupTab:(NSDictionary*)d {
+    pauseNotifications = true;
+    
     GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
     NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
     NSViewController<GSGlyphEditViewControllerProtocol>* evc =
@@ -293,7 +263,6 @@
 
     NSInteger selected = -1;
     unsigned long activeIndex = [d[@"activeIndex"] unsignedLongValue];
-
     NSInteger selectedLen = 0;
     NSInteger i = 0;
     for (NSDictionary* l in d[@"layers"]) {
@@ -326,8 +295,10 @@
             i++;
         }
         [evc forceRedraw];
-        [evc forceRedraw];
+        [self addObserversToGraphicView:evc.graphicView];
+        self->pauseNotifications = false;
     });
+    
 }
 
 - (void) drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
@@ -398,10 +369,9 @@
     RTC_OBJC_TYPE(RTCConfiguration) *config = [[RTC_OBJC_TYPE(RTCConfiguration) alloc] init];
     RTC_OBJC_TYPE(RTCCertificate) *pcert = [RTC_OBJC_TYPE(RTCCertificate)
         generateCertificateWithParams:@{@"expires" : @100000, @"name" : @"RSASSA-PKCS1-v1_5"}];
-//    NSArray *urlStrings = @[  ];
-//    RTC_OBJC_TYPE(RTCIceServer) *server =
-//        [[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:urlStrings];    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
-//    config.iceServers = @[ server ];
+    RTC_OBJC_TYPE(RTCIceServer) *server =
+        [[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ stunServer ]];    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
+    config.iceServers = @[ server ];
         config.iceServers = @[ ];
     config.certificate = pcert;
 

@@ -80,3 +80,22 @@ RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
 - (void) send:(NSDictionary*)d;
 - (NSViewController<GSGlyphEditViewControllerProtocol> *)editViewController;
 @end
+
+
+@interface GSApplication : NSApplication
+@property (weak, nonatomic, nullable) GSDocument* currentFontDocument;
+- (GSDocument*)openDocumentWithContentsOfURL:(NSURL*)url display:(bool)display;
+@end
+
+@interface GSDocument : NSDocument
+@property (nonatomic, retain) GSFont* font;
+@property (weak, nonatomic, nullable) NSWindowController<GSWindowControllerProtocol>* windowController;
+@end
+
+@class GSEditViewController;
+@interface GSEditViewController<GSEditViewControllerProtocol> : NSViewController
+@end
+@interface GSTextStorage;
+- (void) setText:(NSAttributedString*)string;
+@end
+

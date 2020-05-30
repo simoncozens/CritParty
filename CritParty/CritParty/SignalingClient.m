@@ -209,6 +209,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 }
 
 - (void)gotError:(NSString *)error {
+    if ([error isEqualToString:@"You're not in a session!"]) return;
     [self.delegate signalingClient:self gotError:error];
 }
 

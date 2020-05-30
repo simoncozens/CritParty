@@ -13,6 +13,16 @@
 
 @implementation CritParty (Observers)
 
+-(void) addObserversToGraphicView:(NSView<GSGlyphEditViewProtocol, NSTextInputClient>*)graphicView {
+    @try {
+        [graphicView removeObserver:self forKeyPath:@"activeLayer"];
+        [graphicView removeObserver:self forKeyPath:@"selectedRange"];
+    } @catch (NSException * __unused exception) {} // Horrible
+
+    [graphicView addObserver:self forKeyPath:@"activeLayer" options:0 context:nil];
+    [graphicView addObserver:self forKeyPath:@"selectedRange" options:0 context:nil];
+}
+
 -(void) addObserversToLayer:(GSLayer*)l {
     @try {
         [l removeObserver:self forKeyPath:@"paths"];
@@ -68,6 +78,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     NSLog(@"Observer: %@ %@ %@", keyPath, object, change);
+    if (pauseNotifications) { return; }
     if ([object isKindOfClass:[GSNode class]] &&
         ([keyPath isEqualToString:@"position"] ||
          [keyPath isEqualToString:@"connection"] ||
@@ -93,6 +104,11 @@
         [self sendUpdatedLayer:object];
         return;
     }
+    
+    if ([keyPath isEqualToString:@"selectedRange"] || [keyPath isEqualToString:@"activeLayer"]) {
+        [self sendUpdatedEditView];
+    }
+
 }
 
 - (NSDictionary*)nodeAsDictionary:(GSNode*)n {
@@ -227,4 +243,30 @@
     [n setType:[d[@"nodetype"] intValue]];
 }
 
+- (NSDictionary*)editViewInformation {
+    GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
+    NSViewController<GSGlyphEditViewControllerProtocol>* evc =
+    windowController.activeEditViewController;
+    NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
+    NSMutableArray *layers = [[NSMutableArray alloc] init];
+    state[@"activeIndex"] = [NSNumber numberWithUnsignedLong:[evc.graphicView activeIndex]];
+    state[@"writingDirection"] = [NSNumber numberWithInt:[evc writingDirection]];
+    for (GSLayer* l in evc.allLayers) {
+        UTF32Char inputChar = [currentDocument.font characterForGlyph:l.parent];
+        [layers addObject:@{
+            @"layerId": [l layerId],
+            @"char": [[NSString alloc] initWithBytes:&inputChar length:4 encoding:NSUTF32LittleEndianStringEncoding],
+            @"selected": [NSNumber numberWithBool:[[evc selectedLayers] containsObject:l]]
+        }];
+    }
+    state[@"layers"] = layers;
+    state[@"type"] = @"tab";
+    return state;
+}
+
+- (void) sendUpdatedEditView {
+    if(!connected || pauseNotifications) return;
+    [self send: [self editViewInformation]];
+}
 @end

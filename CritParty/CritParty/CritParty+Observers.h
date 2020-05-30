@@ -14,6 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CritParty (Observers)
+-(void) addObserversToGraphicView:(NSView<GSGlyphEditViewProtocol, NSTextInputClient>*)graphicView;
 -(void) addObserversToLayer:(GSLayer*)l;
 -(void) addObserversToPath:(GSPath*)p;
 -(void) addObserversToNode:(GSNode*)n;
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void) updateNode:(NSDictionary*)d;
 -(void) updateAnchor:(NSDictionary*)d;
 -(void) updateLayer:(NSDictionary*)d;
+- (NSDictionary*)editViewInformation;
 @end
 
 NS_ASSUME_NONNULL_END

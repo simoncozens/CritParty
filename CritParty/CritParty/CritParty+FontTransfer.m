@@ -10,11 +10,6 @@
 
 #import <AppKit/AppKit.h>
 
-@interface GSApplication : NSApplication
-@property (weak, nonatomic, nullable) GSDocument* currentFontDocument;
-- (GSDocument*)openDocumentWithContentsOfURL:(NSURL*)url display:(bool)display;
-@end
-
 @implementation CritParty (FontTransfer)
 
 - (NSURL*)tempFile {
