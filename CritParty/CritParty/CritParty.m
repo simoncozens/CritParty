@@ -167,7 +167,23 @@ NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
                ];
     // XXX Should be the one in the list
     GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
+    if (!currentDocument) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Open a document first"];
+        [alert setInformativeText:@"You don't have anything to share at the moment."];
+        [alert addButtonWithTitle:@"Ok"];
+        [alert runModal];
+        return;
+    }
     sharedFont = currentDocument.font;
+    if (![self editViewController]) {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"Open a tab first"];
+        [alert setInformativeText:@"You don't have anything to share at the moment."];
+        [alert addButtonWithTitle:@"Ok"];
+        [alert runModal];
+        return;
+    }
     [self addObserversToLayer:[self editViewController].activeLayer];
     [self addObserversToGraphicView:[self editViewController].graphicView];
     [self lockInterface];
