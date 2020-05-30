@@ -33,7 +33,7 @@ ID.
 - [x] Share/display path changes
 - [x] Work out what to do when layer changes?
 - [ ] Error handling
-- [ ] Disconnection
+- [x] Disconnection
 - [ ] Audio/video
 
 # Security

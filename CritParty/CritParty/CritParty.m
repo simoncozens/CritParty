@@ -72,12 +72,31 @@ NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
 
 /// MARK: - Boring UI Stuff
 - (IBAction)connectButton:(id)sender {
-    if ([shareJoinTab indexOfTabViewItem:[shareJoinTab selectedTabViewItem]] == 0) {
-        [self beginSharing];
+    if (!connected) {
+        if ([shareJoinTab indexOfTabViewItem:[shareJoinTab selectedTabViewItem]] == 0) {
+            [self beginSharing];
+        } else {
+            mode = CritPartyModeGuest;
+            [self joinAsGuest];
+        }
     } else {
-        mode = CritPartyModeGuest;
-        [self joinAsGuest];
+        [self doDisconnect];
     }
+}
+
+- (void)doDisconnect {
+    if (mode == CritPartyModeHost) {
+        for (NSString* s in guestUsers) {
+            NSDictionary* d= guestUsers[s];
+            if (d[@"dataChannel"]) { [(RTCDataChannel*)d[@"dataChannel"] close]; }
+            if (d[@"peerConnection"]) { [(RTCPeerConnection*)d[@"peerConnection"] close]; }
+        }
+    } else {
+        if (hostDataChannel) { [hostDataChannel close]; }
+        if (hostPeerConnection) { [hostPeerConnection close]; }
+    }
+    [self.client disconnect];
+    [self unlockInterface];
 }
 
 - (void)lockInterface {
@@ -230,7 +249,7 @@ NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
 }
 
 - (void) send:(NSDictionary*)d {
-    SCLog(@"Sending: %@", d);
+//    SCLog(@"Sending: %@", d);
     if (mode == CritPartyModeHost) {
         [self sendToEveryone:d];
     } else {
@@ -355,12 +374,10 @@ NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
 
 - (void)handleConnectionError:(NSString*)error {
     NSLog(@"Got error %@", error);
-    [self.client disconnect];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self->textbox setString:error];
-        self->connected = false;
-        [self unlockInterface];
     });
+    [self doDisconnect];
 }
 /// MARK: - Host peer-to-peer administration
 
@@ -510,6 +527,19 @@ didSetSessionDescriptionWithError:error];
     [pc addIceCandidate:icecandidate];
 }
 
+- (void)signalingClient:(nonnull SignalingClient *)client guestExited:(nonnull NSString *)username {
+    // Tell everyone
+    NSString* message = [username stringByAppendingString:@" has left"];
+    [self appendMessage:message];
+    // Tell others.
+    [self sendToEveryone:@{ @"message": message }];
+
+    // Close peer connection.
+    NSDictionary* stuff = guestUsers[username];
+    if (!stuff) { return; }
+    [(RTCDataChannel*)stuff[@"dataChannel"] close];
+    [(RTCPeerConnection*)stuff[@"peerConnection"] close];
+}
 
 /// MARK: - Signalling client callbacks (guest)
 
@@ -530,6 +560,24 @@ didSetSessionDescriptionWithError:error];
     }];
 
 }
+
+- (void)signalingClientShutdown:(nonnull SignalingClient *)client {
+    if (hostDataChannel) {
+        [hostDataChannel close];
+    }
+    if (hostPeerConnection) {
+        [hostPeerConnection close];
+    }
+    [self.client disconnect];
+    // Send alert
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:@"Host closed connection"];
+    [alert setInformativeText:@"Party's over, folks."];
+    [alert addButtonWithTitle:@"Ok"];
+    [alert runModal];
+    [self unlockInterface];
+}
+
 
 /// MARK: - RTC administration (common)
 

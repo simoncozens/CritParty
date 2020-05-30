@@ -72,6 +72,13 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
     if (d[@"type"] && [d[@"type"] isEqual:@"ice-candidate"]) {
         [self gotIceCandidate:d];
     }
+    if (d[@"type"] && [d[@"type"] isEqual:@"connectionclosed"]) {
+        [(SignalingClientHost*)self connectionClosed:d[@"username"]];
+    }
+    if (d[@"type"] && [d[@"type"] isEqual:@"shutdown"]) {
+        [(SignalingClientGuest*)self sessionShutdown];
+    }
+
     if (d[@"error"]) {
         [self gotError:d[@"error"]];
     }
@@ -137,6 +144,10 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 
 - (void)gotSessionId:(NSDictionary *)d {
     [self.delegate signalingClient:self didReturnSessionID:d[@"sessionid"]];
+}
+
+- (void)connectionClosed:(NSString *)username {
+    [self.delegate signalingClient:self guestExited:username];
 }
 
 - (void)gotIceCandidate:(NSDictionary *)d {
@@ -211,6 +222,10 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 - (void)gotError:(NSString *)error {
     if ([error isEqualToString:@"You're not in a session!"]) return;
     [self.delegate signalingClient:self gotError:error];
+}
+
+- (void)sessionShutdown {
+    [self.delegate signalingClientShutdown:self];
 }
 
 - (void)gotAnswer:(NSDictionary*)d {
