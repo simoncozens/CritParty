@@ -25,7 +25,7 @@ ID.
 - [x] Receive and open file
 - [x] Share/display path changes
 - [x] Work out what to do when layer changes?
-- [ ] Error handling
+- [x] Error handling
 - [x] Disconnection
 - [ ] Audio/video
 

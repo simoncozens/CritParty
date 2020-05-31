@@ -730,8 +730,7 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
                  error:(NSError *)error {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (error) {
-            RTCLogError(@"Failed to create session description. Error: %@", error);
-            //      [self disconnect];
+            [self handleConnectionError:[error description]];
             return;
         }
         SCLog(@"didCreateSessionDescription");
@@ -751,7 +750,8 @@ didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
                 assert(peerConnection.remoteDescription && peerConnection.localDescription);
                 
             } else {
-                NSAssert(false, @"Couldn't find where to send answer");
+                [self handleConnectionError:@"Can't work out how to answer a join request"];
+                return;
             }
         } else {
             assert([self.client isKindOfClass:[SignalingClientGuest class]]);
