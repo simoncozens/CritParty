@@ -17,7 +17,6 @@
 		F47962E124801C2F006565F7 /* CritPartyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47962E024801C2F006565F7 /* CritPartyWindow.xib */; };
 		F47962EA24801CA3006565F7 /* RTCIceCandidate+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E824801CA2006565F7 /* RTCIceCandidate+JSON.m */; };
 		F47962EB24801CA3006565F7 /* SignalingClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E624801CA2006565F7 /* SignalingClient.m */; };
-		F47962EC24801CA3006565F7 /* RTCIceServer+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E424801CA1006565F7 /* RTCIceServer+JSON.m */; };
 		F47962ED24801CA3006565F7 /* RTCSessionDescription+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = F47962E924801CA3006565F7 /* RTCSessionDescription+JSON.m */; };
 		F49CB8232481376100161313 /* CritParty+Observers.m in Sources */ = {isa = PBXBuildFile; fileRef = F49CB8222481376100161313 /* CritParty+Observers.m */; };
 		F49CB82624819CC100161313 /* CritParty+FontTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = F49CB82524819CC100161313 /* CritParty+FontTransfer.m */; };
@@ -52,8 +51,6 @@
 		F47962E024801C2F006565F7 /* CritPartyWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CritPartyWindow.xib; sourceTree = "<group>"; };
 		F47962E224801CA0006565F7 /* SignalingClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignalingClient.h; sourceTree = "<group>"; };
 		F47962E324801CA1006565F7 /* RTCSessionDescription+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCSessionDescription+JSON.h"; sourceTree = "<group>"; };
-		F47962E424801CA1006565F7 /* RTCIceServer+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCIceServer+JSON.m"; sourceTree = "<group>"; };
-		F47962E524801CA1006565F7 /* RTCIceServer+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCIceServer+JSON.h"; sourceTree = "<group>"; };
 		F47962E624801CA2006565F7 /* SignalingClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignalingClient.m; sourceTree = "<group>"; };
 		F47962E724801CA2006565F7 /* RTCIceCandidate+JSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTCIceCandidate+JSON.h"; sourceTree = "<group>"; };
 		F47962E824801CA2006565F7 /* RTCIceCandidate+JSON.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTCIceCandidate+JSON.m"; sourceTree = "<group>"; };
@@ -126,8 +123,6 @@
 				F43567C6247F11B100BDF248 /* Info.plist */,
 				F47962E724801CA2006565F7 /* RTCIceCandidate+JSON.h */,
 				F47962E824801CA2006565F7 /* RTCIceCandidate+JSON.m */,
-				F47962E524801CA1006565F7 /* RTCIceServer+JSON.h */,
-				F47962E424801CA1006565F7 /* RTCIceServer+JSON.m */,
 				F47962E324801CA1006565F7 /* RTCSessionDescription+JSON.h */,
 				F47962E924801CA3006565F7 /* RTCSessionDescription+JSON.m */,
 				F47962E224801CA0006565F7 /* SignalingClient.h */,
@@ -245,7 +240,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F47962EC24801CA3006565F7 /* RTCIceServer+JSON.m in Sources */,
 				F47962ED24801CA3006565F7 /* RTCSessionDescription+JSON.m in Sources */,
 				F47962EB24801CA3006565F7 /* SignalingClient.m in Sources */,
 				F43567C5247F11B100BDF248 /* CritParty.m in Sources */,
