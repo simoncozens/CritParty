@@ -35,9 +35,9 @@
     }
     NSData *data = [NSData dataWithContentsOfURL:temporaryFileURL];
     
-    // Next we split that data into 16k chunks.
+    // Next we split that data into 10k chunks.
     NSUInteger length = [data length];
-    NSUInteger chunkSize = 16 * 1024;
+    NSUInteger chunkSize = 10 * 1024;
     NSUInteger offset = 0;
     NSUInteger chunkIndex = 0;
     NSUInteger totalChunks = ceil(length / (float)chunkSize) - 1; // Chunk count is 0 indexed
