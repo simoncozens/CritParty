@@ -71,6 +71,7 @@ RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
      bool pauseNotifications;
      NSURL* incomingFontFile;
      GSFont* sharedFont;
+     NSMutableArray* guestIceCandidateQueue;
 
  }
 

@@ -34,6 +34,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
         peerIds = [[NSMutableDictionary alloc] init];
         answerQueue = [[NSMutableDictionary alloc] init];
         outgoingQueue = [[NSMutableArray alloc] init];
+        guestIceCandidateQueue = [[NSMutableArray alloc] init];
         [shareJoinTab setDelegate:self];
         connected = false;
         cursorColor = 0;
@@ -564,7 +565,8 @@ didSetSessionDescriptionWithError:error];
 
 - (void)signalingClient:(nonnull SignalingClient *)client didReceiveIceCandidate:(nonnull RTCIceCandidate *)icecandidate {
     SCLog(@"Adding ICE candidate %@", icecandidate);
-    [hostPeerConnection addIceCandidate:icecandidate];
+    [guestIceCandidateQueue addObject:icecandidate];
+    [self tryToDrainIceCandidateQueue];
 }
 
 
@@ -576,8 +578,16 @@ didSetSessionDescriptionWithError:error];
                            completionHandler:^(NSError *error) {
         [weakSelf peerConnection:weakPc
 didSetSessionDescriptionWithError:error];
+        [weakSelf tryToDrainIceCandidateQueue];
     }];
+}
 
+- (void)tryToDrainIceCandidateQueue {
+    if (![hostPeerConnection remoteDescription]) { return; }
+    for (RTCIceCandidate* c in guestIceCandidateQueue) {
+        [hostPeerConnection addIceCandidate:c];
+    }
+    [guestIceCandidateQueue removeAllObjects];
 }
 
 - (void)signalingClientShutdown:(nonnull SignalingClient *)client {
