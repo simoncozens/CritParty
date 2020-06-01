@@ -13,7 +13,8 @@
 @implementation CritParty
 @synthesize factory = _factory;
 
-NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk:3478";
+NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
+NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 
 - (id) init {
     NSArray *arrayOfStuff;
@@ -400,9 +401,14 @@ NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk:3478";
     RTC_OBJC_TYPE(RTCConfiguration) *config = [[RTC_OBJC_TYPE(RTCConfiguration) alloc] init];
     RTC_OBJC_TYPE(RTCCertificate) *pcert = [RTC_OBJC_TYPE(RTCCertificate)
         generateCertificateWithParams:@{@"expires" : @100000, @"name" : @"RSASSA-PKCS1-v1_5"}];
-    RTC_OBJC_TYPE(RTCIceServer) *server =
-        [[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ stunServer ]];    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
-    config.iceServers = @[ server ];
+    RTC_OBJC_TYPE(RTCIceServer) *server1 =
+        [[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ stunServer ]];
+    RTC_OBJC_TYPE(RTCIceServer) *server2 =
+        [[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ turnServer ]
+                                                       username:@"critparty"
+         credential:@"critparty"];
+    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
+    config.iceServers = @[ server2 ];
     config.certificate = pcert;
 
     RTCPeerConnection* pc = [_factory peerConnectionWithConfiguration:config
