@@ -13,7 +13,7 @@
 @implementation CritParty
 @synthesize factory = _factory;
 
-NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
+NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk:3478";
 
 - (id) init {
     NSArray *arrayOfStuff;
@@ -403,7 +403,6 @@ NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
     RTC_OBJC_TYPE(RTCIceServer) *server =
         [[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ stunServer ]];    config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
     config.iceServers = @[ server ];
-        config.iceServers = @[ ];
     config.certificate = pcert;
 
     RTCPeerConnection* pc = [_factory peerConnectionWithConfiguration:config
