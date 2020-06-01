@@ -53,7 +53,7 @@ wss.on("connection", function (ws) {
             data = {};
             return;
         }
-        console.log(`Got message ${JSON.stringify(msg)} from peer ${connection.peerId}`);
+        //console.log(`Got message ${JSON.stringify(msg)} from peer ${connection.peerId}`)
         if (data["type"] == "newsession") {
             if (!checkPassword(data)) {
                 return sendError(connection, "Password not long enough");

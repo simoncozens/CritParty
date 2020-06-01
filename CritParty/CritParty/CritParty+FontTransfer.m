@@ -55,7 +55,7 @@
         @"total": [NSNumber numberWithUnsignedInteger:totalChunks],
         @"data": [chunk base64EncodedStringWithOptions:0]
     };
-        NSLog(@"Sending glyphs file %@/%@", message[@"chunk"], message[@"total"]);
+        SCLog(@"Sending glyphs file %@/%@", message[@"chunk"], message[@"total"]);
         [self sendToGuest:username data:message];
         chunkIndex++;
     } while (offset < length);

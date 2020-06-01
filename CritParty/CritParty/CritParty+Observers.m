@@ -27,11 +27,13 @@
     @try {
         [l removeObserver:self forKeyPath:@"paths"];
         [l removeObserver:self forKeyPath:@"anchors"];
+        [l removeObserver:self forKeyPath:@"annotations"];
         [l removeObserver:self forKeyPath:@"LSB"];
         [l removeObserver:self forKeyPath:@"RSB"];
     } @catch (NSException * __unused exception) {} // Horrible
     [l addObserver:self forKeyPath:@"paths" options:0 context:nil];
     [l addObserver:self forKeyPath:@"anchors" options:0 context:nil];
+    [l addObserver:self forKeyPath:@"annotations" options:0 context:nil];
     [l addObserver:self forKeyPath:@"LSB" options:0 context:nil];
     [l addObserver:self forKeyPath:@"RSB" options:0 context:nil];
     GSPath* p;
@@ -46,7 +48,7 @@
 }
 
 -(void) addObserversToPath:(GSPath*)p {
-    NSLog(@"Adding obsrerver to path %@", p);
+    SCLog(@"Adding obsrerver to path %@", p);
     @try {
         [p removeObserver:self forKeyPath:@"nodes"];
     } @catch (NSException * __unused exception) {} // Horrible
@@ -58,7 +60,7 @@
 }
 
 -(void) addObserversToNode:(GSNode*)n {
-    NSLog(@"Adding obsrerver to node %@", n);
+    SCLog(@"Adding obsrerver to node %@", n);
     @try {
         [n removeObserver:self forKeyPath:@"connection"];
         [n removeObserver:self forKeyPath:@"type"];
@@ -70,7 +72,7 @@
 }
 
 -(void) addObserversToAnchor:(GSAnchor*)a {
-    NSLog(@"Adding obsrerver to anchor %@", a);
+    SCLog(@"Adding obsrerver to anchor %@", a);
     @try {
         [a removeObserver:self forKeyPath:@"position"];
     }@ catch (NSException * __unused exception) {} // Horrible
@@ -81,7 +83,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    NSLog(@"Observer: %@ %@ %@", keyPath, object, change);
+    SCLog(@"Observer: %@ %@ %@", keyPath, object, change);
     if (pauseNotifications) { return; }
     if ([object isKindOfClass:[GSNode class]] &&
         ([keyPath isEqualToString:@"position"] ||
@@ -185,13 +187,13 @@
         [self addObserversToPath:p];
         [layer insertPath:p atIndex:pathIndex];
         self->pauseNotifications = false;
-        NSLog(@"Constructed a path %@", p);
+        SCLog(@"Constructed a path %@", p);
         [[self editViewController] redraw];
     });
 }
 
 - (void) updateLayer:(NSDictionary*)d {
-    NSLog(@"Updating layer");
+    SCLog(@"Updating layer");
     GSLayer *layer = [self editViewController].activeLayer;
     if(!layer) return;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -200,7 +202,7 @@
     //    GSGlyph *g = layer.parent;
         //    [self addObserversToLayer:newLayer];
     //    [g setLayer:newLayer forKey:d[@"layerId"]];
-    //    NSLog(@"Constructed a layer %@ (paths %lu)", [newLayer layerDict], (unsigned long)[newLayer countOfPaths]);
+    //    SCLog(@"Constructed a layer %@ (paths %lu)", [newLayer layerDict], (unsigned long)[newLayer countOfPaths]);
         layer.paths = newLayer.paths;
         layer.anchors = newLayer.anchors;
         layer.annotations = newLayer.annotations;

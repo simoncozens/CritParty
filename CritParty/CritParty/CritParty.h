@@ -27,6 +27,9 @@
 #include "RTCIceCandidate+JSON.h"
 #import "SignalingClient.h"
 
+//#define SCLog(...) NSLog(__VA_ARGS__)
+#define SCLog(...)
+
 typedef NS_ENUM(NSInteger, CritPartyMode) {
     CritPartyModeHost,
     CritPartyModeGuest

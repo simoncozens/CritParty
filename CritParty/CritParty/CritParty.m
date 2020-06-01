@@ -10,8 +10,6 @@
 #import "CritParty+Observers.h"
 #import "CritParty+FontTransfer.h"
 
-#define SCLog(...) NSLog(__VA_ARGS__)
-
 @implementation CritParty
 @synthesize factory = _factory;
 
