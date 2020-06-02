@@ -143,13 +143,25 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 }
 
 - (NSColor*)getNewCursorColor {
-	switch (++cursorColor % 6) {
-	case 0: return [NSColor redColor];
-	case 1: return [NSColor blueColor];
-	case 2: return [NSColor greenColor];
-	case 3: return [NSColor orangeColor];
-	case 4: return [NSColor yellowColor];
-	case 5: return [NSColor purpleColor];
+	if (@available(macOS 10.10, *)) {
+		switch (++cursorColor % 6) {
+			case 0: return [NSColor systemRedColor];
+			case 1: return [NSColor systemBlueColor];
+			case 2: return [NSColor systemGreenColor];
+			case 3: return [NSColor systemOrangeColor];
+			case 4: return [NSColor systemYellowColor];
+			case 5: return [NSColor systemPurpleColor];
+		}
+	}
+	else {
+		switch (++cursorColor % 6) {
+			case 0: return [NSColor redColor];
+			case 1: return [NSColor blueColor];
+			case 2: return [NSColor greenColor];
+			case 3: return [NSColor orangeColor];
+			case 4: return [NSColor yellowColor];
+			case 5: return [NSColor purpleColor];
+		}
 	}
 	return [NSColor grayColor];
 }
@@ -342,19 +354,32 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		// NSLog(@"Drawing cursor %@", cursors[username]);
 
 		NSPoint pt = [cursors[username][@"location"] pointValue];
-		NSBezierPath *c = [self arrowCursorPath];
-		CGFloat currentZoom = [editViewController.graphicView scale];
+		NSBezierPath *arrowCursorPath = [self arrowCursorPath];
+		CGFloat scale = [editViewController.graphicView scale];
 		NSAffineTransform *transform = [NSAffineTransform transform];
-		[transform translateXBy: pt.x yBy: pt.y];
-		[c transformUsingAffineTransform:transform];
+		[transform translateXBy:pt.x yBy:pt.y];
+		[transform scaleBy:0.25 / scale];
+		[arrowCursorPath transformUsingAffineTransform:transform];
+		
+		[NSGraphicsContext saveGraphicsState];
+		
+		NSShadow *shadow = [[NSShadow alloc] init];
+		shadow.shadowOffset = NSMakeSize(0, -1);
+		shadow.shadowBlurRadius = 2;
+		shadow.shadowColor = [NSColor colorWithWhite:0 alpha:0.5];
+		[shadow set];
+		[[NSColor whiteColor] set];
+		[arrowCursorPath setLineWidth:2 / scale];
+		[arrowCursorPath stroke];
+		[NSGraphicsContext restoreGraphicsState];
+		
 		[cursors[username][@"color"] setFill];
-
-		[username drawAtPoint:NSMakePoint(pt.x, pt.y - 2 * c.bounds.size.height) withAttributes:@{
-			NSFontAttributeName: [NSFont labelFontOfSize:12 / currentZoom],
+		[arrowCursorPath fill];
+		
+		[username drawAtPoint:NSMakePoint(pt.x, pt.y - 2 * arrowCursorPath.bounds.size.height) withAttributes:@{
+			NSFontAttributeName: [NSFont labelFontOfSize:12 / scale],
 			NSForegroundColorAttributeName:cursors[username][@"color"]
 		}];
-		[c fill];
-
 	}
 }
 
@@ -807,18 +832,22 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	}
 }
 
-- (NSBezierPath*) arrowCursorPath {
-	NSBezierPath* path = [[NSBezierPath alloc]init];
-	[path moveToPoint:NSMakePoint(0,0)];
-	[path lineToPoint:NSMakePoint(0,-47)];
-	[path lineToPoint:NSMakePoint(11,-35)];
-	[path lineToPoint:NSMakePoint(20,-59)];
-	[path lineToPoint:NSMakePoint(28,-57)];
-	[path lineToPoint:NSMakePoint(18,-33)];
-	[path lineToPoint:NSMakePoint(32,-33)];
-	[path lineToPoint:NSMakePoint(32,-33)];
-	[path closePath];
-	return path;
+- (NSBezierPath*)arrowCursorPath {
+	static NSBezierPath* path = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		path = [[NSBezierPath alloc]init];
+		[path moveToPoint:NSMakePoint(0,0)];
+		[path lineToPoint:NSMakePoint(0,-47)];
+		[path lineToPoint:NSMakePoint(11,-35)];
+		[path lineToPoint:NSMakePoint(20,-59)];
+		[path lineToPoint:NSMakePoint(28,-57)];
+		[path lineToPoint:NSMakePoint(18,-33)];
+		[path lineToPoint:NSMakePoint(32,-33)];
+		[path lineToPoint:NSMakePoint(32,-33)];
+		[path closePath];
+	});
+	return [path copy];
 }
 
 @end
