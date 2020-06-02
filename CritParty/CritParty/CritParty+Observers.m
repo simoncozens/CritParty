@@ -77,6 +77,7 @@
 		// [g setLayer:newLayer forKey:d[@"layerId"]];
 		SCLog(@"Constructed a layer %@ (paths %lu)", [newLayer layerDict], (unsigned long)[newLayer countOfPaths]);
 		layer.paths = newLayer.paths;
+		layer.components = newLayer.components;
 		layer.anchors = newLayer.anchors;
 		layer.annotations = newLayer.annotations;
 		layer.LSB = newLayer.LSB;
