@@ -5,3 +5,9 @@
 #define	GSLog(args...)			// stubbed out
 #endif
 
+
+#ifdef DEBUG
+	#define SCLog(...) NSLog(__VA_ARGS__)
+#else
+	#define SCLog(...)
+#endif
