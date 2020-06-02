@@ -13,8 +13,7 @@
 @interface RTC_OBJC_TYPE (RTCSessionDescription)
 (JSON)
 
-    + (RTC_OBJC_TYPE(RTCSessionDescription) *)descriptionFromJSONDictionary
-    : (NSDictionary *)dictionary;
++ (RTC_OBJC_TYPE(RTCSessionDescription) *)descriptionFromJSONDictionary:(NSDictionary *)dictionary;
 - (NSData *)JSONData;
 - (NSDictionary *)asDictionary;
 

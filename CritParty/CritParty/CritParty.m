@@ -17,11 +17,11 @@ NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
 NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 
 - (id) init {
-	NSArray *arrayOfStuff;
 	self = [super init];
 	if (self) {
 		NSLog(@"Crit party is initing");
 		NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
+		NSArray *arrayOfStuff;
 		[thisBundle loadNibNamed:@"CritPartyWindow" owner:self topLevelObjects:&arrayOfStuff];
 		NSUInteger viewIndex = [arrayOfStuff indexOfObjectPassingTest:^BOOL (id obj, NSUInteger idx, BOOL *stop) {
 		                                return [obj isKindOfClass:[NSWindow class]];
@@ -45,7 +45,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseDraggedNotification" object:nil];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"GSUpdateInterface" object:nil];
-		[GSCallbackHandler addCallback:self forOperation:@"DrawForeground"];
+		[GSCallbackHandler addCallback:self forOperation:GSDrawForegroundCallbackName];
 
 		NSLog(@"Crit party init done");
 	}
