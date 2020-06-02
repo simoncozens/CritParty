@@ -1,1 +1,4 @@
 node_modules/
+*.xcuserdatad
+/CritParty/Podfile.lock
+/CritParty/Pods
