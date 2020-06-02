@@ -37,28 +37,8 @@
 {
 	SCLog(@"Observer: %@ %@ %@", keyPath, object, change);
 	if (pauseNotifications) { return; }
-	if ([object isKindOfClass:[GSNode class]] &&
-		([keyPath isEqualToString:@"position"] ||
-		 [keyPath isEqualToString:@"connection"] ||
-		 [keyPath isEqualToString:@"type"])) {
-		[self sendUpdatedNode:object];
-		return;
-	}
-	if ([object isKindOfClass:[GSAnchor class]]) {
-		if ([keyPath isEqualToString:@"position"]) {
-			[self sendUpdatedAnchor:object];
-		} else {
-			// Just send the layer
-			[self sendUpdatedLayer:((GSAnchor*)object).parent];
-		}
-		return;
-	}
 
-	if ([keyPath isEqualToString:@"nodes"]) {
-		[self sendUpdatedPath:object];
-		return;
-	}
-	if ([keyPath isEqualToString:@"content"]) {
+    if ([keyPath isEqualToString:@"content"]) {
 		[self sendUpdatedLayer:object];
 		return;
 	}
@@ -68,43 +48,7 @@
 	}
 }
 
-- (NSDictionary*)nodeAsDictionary:(GSNode*)n {
-	GSPath *p = n.parent;
-	return @{
-		@"from": myusername,
-		@"type": @"node",
-		@"x": [NSNumber numberWithFloat:n.position.x],
-		@"y": [NSNumber numberWithFloat:n.position.y],
-		@"connection": [NSNumber numberWithInt:n.connection],
-		@"nodetype": [NSNumber numberWithInt:n.type],
-		@"index": [NSNumber numberWithUnsignedInteger:[p indexOfNode:n]],
-		@"pathindex":[NSNumber numberWithUnsignedInteger:[p.parent indexOfPath: p]]
-	};
-}
-
-- (NSDictionary*)anchorAsDictionary:(GSAnchor*)a {
-	return @{
-		@"from": myusername,
-		@"type": @"anchor",
-		@"x": [NSNumber numberWithFloat:a.position.x],
-		@"y": [NSNumber numberWithFloat:a.position.y],
-		@"name": [a name]
-	};
-}
-
-- (NSDictionary*)pathAsDictionary:(GSPath*)p {
-	return @{
-		@"from": myusername,
-		@"type": @"path",
-		@"pathindex": [NSNumber numberWithUnsignedInteger:[p.parent indexOfPath: p]],
-		@"pathDict": [p pathDict]
-	};
-}
-
 - (NSDictionary*)layerAsDictionary:(GSLayer*)l {
-	NSMutableArray* paths = [[NSMutableArray alloc] init];
-	for (GSPath *p in l.paths) { [paths addObject:[self pathAsDictionary:p]];}
-
 	return @{
 		@"from": myusername,
 		@"type": @"layer",
@@ -113,33 +57,9 @@
 	};
 }
 
-- (void) sendUpdatedPath:(GSPath*)p {
-	if(!connected || pauseNotifications) return;
-	[self send: [self pathAsDictionary:p]];
-}
-
 - (void) sendUpdatedLayer:(GSLayer*)l {
 	if(!connected || pauseNotifications) return;
 	[self send: [self layerAsDictionary:l]];
-}
-
-- (void) updatePath:(NSDictionary*)d {
-	GSLayer *layer = [self editViewController].activeLayer;
-	if(!layer) return;
-	dispatch_async(dispatch_get_main_queue(), ^{
-		NSUInteger pathIndex = [d[@"pathindex"] unsignedIntegerValue];
-		self->pauseNotifications = true;
-		GSPath *p = [[GSPath alloc] initWithPathDict:d[@"pathDict"]];
-		//[self addObserversToPath:p];
-		if (pathIndex <= [layer countOfPaths] - 1) {
-			[layer replacePathAtIndex:pathIndex withPath:p];
-		} else {
-			[layer addPath:p];
-		}
-		self->pauseNotifications = false;
-		SCLog(@"Constructed a path %@", p);
-		[[self editViewController] redraw];
-	});
 }
 
 - (void) updateLayer:(NSDictionary*)d {
@@ -167,51 +87,6 @@
 		//    [self send:@{@"type":@"setuptabs", @"from": myusername}];
 		[[self editViewController] redraw];
 	});
-}
-
-- (void) sendUpdatedAnchor:(GSAnchor*)a {
-	if(!connected || pauseNotifications) return;
-	[self send: [self anchorAsDictionary:a]];
-}
-
-- (void) updateAnchor:(NSDictionary*)d {
-	GSLayer *layer = [self editViewController].activeLayer;
-	if(!layer) return;
-	GSAnchor *a = [layer anchorForName:d[@"name"]];
-	if (!a) return;
-	pauseNotifications = true;
-	// Any other properties will be changed via a layer update
-	[a setPosition:NSMakePoint([d[@"x"] floatValue],[d[@"y"] floatValue])];
-	pauseNotifications = false;
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[[self editViewController] redraw];
-	});
-}
-
-- (void) sendUpdatedNode:(GSNode*)n {
-	if(!connected || pauseNotifications) return;
-	[self send: [self nodeAsDictionary:n]];
-}
-
-- (void) updateNode:(NSDictionary*)d {
-	GSLayer *layer = [self editViewController].activeLayer;
-	if(!layer) return;
-	GSPath *p = [layer pathAtIndex:[d[@"pathindex"] unsignedIntegerValue]];
-	if(!p) return;
-	GSNode *n = [p nodeAtIndex:[d[@"index"] unsignedIntegerValue]];
-	if(!n) return;
-	dispatch_async(dispatch_get_main_queue(), ^{
-		self->pauseNotifications = true;
-		[self updateNode:n fromDictionary:d];
-		self->pauseNotifications = false;
-		[[self editViewController] redraw];
-	});
-}
-
-- (void) updateNode:(GSNode*)n fromDictionary:(NSDictionary*)d {
-	[n setPosition:NSMakePoint([d[@"x"] floatValue],[d[@"y"] floatValue])];
-	[n setConnection:[d[@"connection"] intValue]];
-	[n setType:[d[@"nodetype"] intValue]];
 }
 
 - (NSDictionary*)editViewInformation {

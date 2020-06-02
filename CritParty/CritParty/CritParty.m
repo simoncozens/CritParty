@@ -253,27 +253,6 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		if (mode == CritPartyModeHost) {
 			[self sendToEveryone:d];
 		}
-	} else if ([d[@"type"] isEqualToString:@"node"]) {
-		if (!([d[@"from"] isEqualToString: myusername])) {
-			[self updateNode:d];
-		}
-		if (mode == CritPartyModeHost) {
-			[self sendToEveryone:d];
-		}
-	} else if ([d[@"type"] isEqualToString:@"anchor"]) {
-		if (!([d[@"from"] isEqualToString: myusername])) {
-			[self updateAnchor:d];
-		}
-		if (mode == CritPartyModeHost) {
-			[self sendToEveryone:d];
-		}
-	} else if ([d[@"type"] isEqualToString:@"path"]) {
-		if (!([d[@"from"] isEqualToString: myusername])) {
-			[self updatePath:d];
-		}
-		if (mode == CritPartyModeHost) {
-			[self sendToEveryone:d];
-		}
 	} else if ([d[@"type"] isEqualToString:@"layer"]) {
 		SCLog(@"Got a layer from %@", d[@"from"]);
 		if (!([d[@"from"] isEqualToString: myusername])) {
