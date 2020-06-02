@@ -13,7 +13,7 @@
 
 @implementation CritParty (Observers)
 
--(void)addObserversToGraphicView:(NSView<GSGlyphEditViewProtocol, NSTextInputClient>*)graphicView {
+-(void)addObserversToGraphicView:(NSView<GSGlyphEditViewProtocol>*)graphicView {
 	SCLog(@"__addObserversToGraphicView %@", graphicView);
 	if (_activeGraphicView) {
 		[_activeGraphicView removeObserver:self forKeyPath:@"activeLayer"];
