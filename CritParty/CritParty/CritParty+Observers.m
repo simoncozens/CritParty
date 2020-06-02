@@ -33,12 +33,11 @@
 	[_activeLayer addObserver:self forKeyPath:@"content" options:0 context:nil];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 	SCLog(@"Observer: %@ %@ %@", keyPath, object, change);
 	if (pauseNotifications) { return; }
 
-    if ([keyPath isEqualToString:@"content"]) {
+	if ([keyPath isEqualToString:@"content"]) {
 		[self sendUpdatedLayer:object];
 		return;
 	}
@@ -57,12 +56,12 @@
 	};
 }
 
-- (void) sendUpdatedLayer:(GSLayer*)l {
+- (void)sendUpdatedLayer:(GSLayer*)l {
 	if(!connected || pauseNotifications) return;
-	[self send: [self layerAsDictionary:l]];
+	[self send:[self layerAsDictionary:l]];
 }
 
-- (void) updateLayer:(NSDictionary*)d {
+- (void)updateLayer:(NSDictionary*)d {
 	SCLog(@"Updating layer %@", [self editViewController]);
 	GSLayer *layer = [self editViewController].activeLayer;
 	if (!layer) {
@@ -73,9 +72,9 @@
 		SCLog(@"Updating layer %@", layer);
 		self->pauseNotifications = true;
 		GSLayer *newLayer = [[GSLayer alloc] initWithLayerDict:d[@"layerDict"]];
-		//    GSGlyph *g = layer.parent;
-		//    [self addObserversToLayer:newLayer];
-		//    [g setLayer:newLayer forKey:d[@"layerId"]];
+		// GSGlyph *g = layer.parent;
+		// [self addObserversToLayer:newLayer];
+		// [g setLayer:newLayer forKey:d[@"layerId"]];
 		SCLog(@"Constructed a layer %@ (paths %lu)", [newLayer layerDict], (unsigned long)[newLayer countOfPaths]);
 		layer.paths = newLayer.paths;
 		layer.anchors = newLayer.anchors;

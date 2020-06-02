@@ -265,7 +265,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	}
 }
 
-- (void) send:(NSDictionary*)d {
+- (void)send:(NSDictionary*)d {
 	SCLog(@"Sending: %@", d);
 	if (mode == CritPartyModeHost) {
 		[self sendToEveryone:d];
@@ -274,7 +274,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	}
 }
 
-- (void) sendToEveryone:(NSDictionary*)d {
+- (void)sendToEveryone:(NSDictionary*)d {
 	// Relay to all guests but the originator
 	for (NSString* user in guestUsers) {
 		if ([user isEqualToString:d[@"from"]]) continue;
@@ -282,13 +282,13 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	}
 }
 
-- (void) sendTabToUser:(NSString*)username {
+- (void)sendTabToUser:(NSString*)username {
 	NSDictionary* state = [self editViewInformation];
 	NSLog(@"Sending tab: %@", state);
 	[self sendToGuest:username data:state];
 }
 
-- (void) setupTab:(NSDictionary*)d {
+- (void)setupTab:(NSDictionary*)d {
 	pauseNotifications = true;
 
 	GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
@@ -343,7 +343,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 
 }
 
-- (void) drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
+- (void)drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
 	if (!connected) { return; }
 	for (NSString *username in cursors) {
 		// NSLog(@"Drawing cursor %@", cursors[username]);
@@ -357,8 +357,8 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		[cursors[username][@"color"] setFill];
 
 		[username drawAtPoint:NSMakePoint(pt.x, pt.y - 2 * c.bounds.size.height) withAttributes:@{
-		         NSFontAttributeName: [NSFont labelFontOfSize:12 / currentZoom],
-		         NSForegroundColorAttributeName:cursors[username][@"color"]
+			NSFontAttributeName: [NSFont labelFontOfSize:12 / currentZoom],
+			NSForegroundColorAttributeName:cursors[username][@"color"]
 		}];
 		[c fill];
 
@@ -373,7 +373,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		cursors[username][@"color"] = [self getNewCursorColor];
 	}
 	cursors[username][@"location"] = [NSValue valueWithPoint:pt];
-//    NSLog(@"Setting cursor %@", cursors[username]);
+	// NSLog(@"Setting cursor %@", cursors[username]);
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[[self editViewController] redraw];
 	});
@@ -381,17 +381,17 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 
 /// MARK: - Critparty event callbacks
 
-- (void) mouseMoved:(NSNotification*)notification {
+- (void)mouseMoved:(NSNotification*)notification {
 	if (!connected) { return; }
 	NSEvent* event = [notification object];
 	if (![event isKindOfClass:[NSEvent class]]) { return; }
 	NSPoint Loc = [[self editViewController].graphicView getActiveLocation: event];
-
+	
 	[self send:@{
-	         @"from": myusername,
-	         @"type": @"cursor",
-	         @"x": [NSNumber numberWithFloat: Loc.x ],
-	         @"y": [NSNumber numberWithFloat: Loc.y ]
+		@"from": myusername,
+		@"type": @"cursor",
+		@"x": [NSNumber numberWithFloat: Loc.x ],
+		@"y": [NSNumber numberWithFloat: Loc.y ]
 	}];
 }
 
@@ -441,11 +441,11 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 - (NSString*)getPeerIdFor:(RTCPeerConnection*)pc {
 	__block NSString* answer;
 	[guestUsers enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL* stop) {
-	         RTCPeerConnection* candidatePc = ((NSDictionary*)value)[@"peerConnection"];
-	         if (pc == candidatePc) {
-			 answer = ((NSDictionary*)value)[@"peerId"];
-		 }
-	 }];
+		RTCPeerConnection* candidatePc = ((NSDictionary*)value)[@"peerConnection"];
+		if (pc == candidatePc) {
+			answer = ((NSDictionary*)value)[@"peerId"];
+		}
+	}];
 	if (!answer) {
 		SCLog(@"XXX No peer token found for peer connection?");
 	}
@@ -455,11 +455,11 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 - (RTCPeerConnection*)getPeerConnectionFor:(NSString*)peerId {
 	__block RTC_OBJC_TYPE(RTCPeerConnection) * answer;
 	[guestUsers enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL* stop) {
-	         RTCPeerConnection* candidatePt = ((NSDictionary*)value)[@"peerId"];
-	         if ([peerId isEqualTo:candidatePt]) {
-			 answer = ((NSDictionary*)value)[@"peerConnection"];
-		 }
-	 }];
+		RTCPeerConnection* candidatePt = ((NSDictionary*)value)[@"peerId"];
+		if ([peerId isEqualTo:candidatePt]) {
+			answer = ((NSDictionary*)value)[@"peerConnection"];
+		}
+	}];
 	if (!answer) {
 		SCLog(@"XXX No peer connection found for peer token?");
 	}

@@ -82,13 +82,13 @@
 		NSLog(@"Open!");
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentReceivedAndOpened:) name:@"GSDocumentWasOpenedNotification" object:nil];
 
-		[(GSApplication *)[NSApplication sharedApplication] openDocumentWithContentsOfURL: incomingFontFile display: true];
+		[(GSApplication *)[NSApplication sharedApplication] openDocumentWithContentsOfURL:incomingFontFile display:true];
 	}
 }
 
 - (void) documentReceivedAndOpened:(NSNotification*)n {
 	[self send:@{@"type":@"setuptabs", @"from": myusername}];
-	[[NSFileManager defaultManager]  removeItemAtURL:incomingFontFile error:nil];
+	[[NSFileManager defaultManager] removeItemAtURL:incomingFontFile error:nil];
 }
 
 @end
