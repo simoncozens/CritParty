@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		61CA97F813CD049F956E9EB0 /* libPods-CritParty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A3EA04E255067AC0FC3BBAE /* libPods-CritParty.a */; };
 		F43567BC247F11B100BDF248 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43567BB247F11B100BDF248 /* Cocoa.framework */; };
-		F43567BF247F11B100BDF248 /* CritParty-Prefix.pch in Resources */ = {isa = PBXBuildFile; fileRef = F43567BE247F11B100BDF248 /* CritParty-Prefix.pch */; };
 		F43567C2247F11B100BDF248 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43567C1247F11B100BDF248 /* GlyphsCore.framework */; };
 		F43567C5247F11B100BDF248 /* CritParty.m in Sources */ = {isa = PBXBuildFile; fileRef = F43567C4247F11B100BDF248 /* CritParty.m */; };
 		F47962DD248017FA006565F7 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F47962D924801764006565F7 /* WebRTC.framework */; };
@@ -203,7 +202,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F43567BF247F11B100BDF248 /* CritParty-Prefix.pch in Resources */,
 				F47962E124801C2F006565F7 /* CritPartyWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
