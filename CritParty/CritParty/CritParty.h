@@ -70,7 +70,9 @@ NS_ASSUME_NONNULL_BEGIN
 	NSURL* incomingFontFile;
 	GSFont* sharedFont;
 	NSMutableArray* guestIceCandidateQueue;
-	NSView<GSGlyphEditViewProtocol, NSTextInputClient> *_activeGraphicView;
+	
+	NSViewController<GSGlyphEditViewControllerProtocol> *_editViewController;
+	NSView<GSGlyphEditViewProtocol> *_activeGraphicView;
 	GSLayer *_activeLayer;
 }
 

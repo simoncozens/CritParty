@@ -155,10 +155,13 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 }
 
 - (NSViewController<GSGlyphEditViewControllerProtocol> *)editViewController {
+	if (_editViewController) {
+		return _editViewController;
+	}
 	GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
 	NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
-	NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [windowController activeEditViewController];
-	return editViewController;
+	_editViewController = [windowController activeEditViewController];
+	return _editViewController;
 }
 
 /// MARK: - Crit Party Implementation
@@ -345,12 +348,13 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 
 - (void)drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
 	if (!connected) { return; }
+	NSViewController<GSGlyphEditViewControllerProtocol> *editViewController = [self editViewController];
 	for (NSString *username in cursors) {
 		// NSLog(@"Drawing cursor %@", cursors[username]);
 
 		NSPoint pt = [cursors[username][@"location"] pointValue];
 		NSBezierPath *c = [self arrowCursorPath];
-		CGFloat currentZoom = [[self editViewController].graphicView scale];
+		CGFloat currentZoom = [editViewController.graphicView scale];
 		NSAffineTransform *transform = [NSAffineTransform transform];
 		[transform translateXBy: pt.x yBy: pt.y];
 		[c transformUsingAffineTransform:transform];
