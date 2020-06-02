@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CritParty (FontTransfer)
 - (void)sendFont:(GSFont*)font toUsername:(NSString*)username;
-- (void)saveAndOpenGlyphsDocument:(NSData*)data;
 - (void)handleIncomingFontChunk:(NSDictionary*)d;
 @end
 
