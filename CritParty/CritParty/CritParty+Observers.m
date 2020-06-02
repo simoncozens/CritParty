@@ -85,7 +85,6 @@
 		[self addObserversToLayer:layer];
 		self->pauseNotifications = false;
 		//    [self send:@{@"type":@"setuptabs", @"from": myusername}];
-		[[self editViewController] redraw];
 	});
 }
 
