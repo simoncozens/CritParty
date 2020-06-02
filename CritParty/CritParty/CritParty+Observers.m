@@ -274,8 +274,10 @@
     state[@"writingDirection"] = [NSNumber numberWithInt:[evc writingDirection]];
     for (GSLayer* l in evc.allLayers) {
         UTF32Char inputChar = [currentDocument.font characterForGlyph:l.parent];
+        bool isControl = [l isKindOfClass:NSClassFromString(@"GSControlLayer")];
         [layers addObject:@{
-            @"layerId": [l layerId],
+            @"isControl": [NSNumber numberWithBool:isControl],
+            @"layerId": (isControl ? @"" : [l layerId]),
             @"char": [[NSString alloc] initWithBytes:&inputChar length:4 encoding:NSUTF32LittleEndianStringEncoding],
             @"selected": [NSNumber numberWithBool:[[evc selectedLayers] containsObject:l]]
         }];
