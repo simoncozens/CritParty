@@ -110,13 +110,9 @@
 
 - (void) sendUpdatedEditView {
 	if(!connected || pauseNotifications) return;
-	// This is looping horribly. :-(
-	// For the sake of simplicity, let's say only the HOST can change edit view
-	if (mode == CritPartyModeHost) {
-		[self send:[self editViewInformation]];
-		[self addObserversToLayer:[self editViewController].activeLayer];
-		[self addObserversToGraphicView:[self editViewController].graphicView];
-	}
+    [self send:[self editViewInformation]];
+    [self addObserversToLayer:[self editViewController].activeLayer];
+    [self addObserversToGraphicView:[self editViewController].graphicView];
 }
 
 @end
