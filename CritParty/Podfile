@@ -1,4 +1,0 @@
-target 'CritParty' do
-  pod 'SocketRocket', '~> 0.5.0'
-end
-

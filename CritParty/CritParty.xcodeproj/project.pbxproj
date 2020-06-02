@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		61CA97F813CD049F956E9EB0 /* libPods-CritParty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A3EA04E255067AC0FC3BBAE /* libPods-CritParty.a */; };
+		56ED314C2486CFB2001F8544 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 56ED314B2486CFB2001F8544 /* libSocketRocket.a */; };
 		F43567BC247F11B100BDF248 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43567BB247F11B100BDF248 /* Cocoa.framework */; };
 		F43567C2247F11B100BDF248 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43567C1247F11B100BDF248 /* GlyphsCore.framework */; };
 		F43567C5247F11B100BDF248 /* CritParty.m in Sources */ = {isa = PBXBuildFile; fileRef = F43567C4247F11B100BDF248 /* CritParty.m */; };
@@ -36,9 +36,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1413CD3A206E673AF236FE11 /* Pods-CritParty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CritParty.release.xcconfig"; path = "Target Support Files/Pods-CritParty/Pods-CritParty.release.xcconfig"; sourceTree = "<group>"; };
-		1B34971BF24BE7EB8B0C4076 /* Pods-CritParty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CritParty.debug.xcconfig"; path = "Target Support Files/Pods-CritParty/Pods-CritParty.debug.xcconfig"; sourceTree = "<group>"; };
-		5A3EA04E255067AC0FC3BBAE /* libPods-CritParty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CritParty.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		56ED314B2486CFB2001F8544 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = "../../../../Library/Developer/Xcode/DerivedData/CritParty-axxdjyprmyicbpgplkwapxaqviya/Build/Products/Debug/SocketRocket/libSocketRocket.a"; sourceTree = "<group>"; };
 		F43567B8247F11B100BDF248 /* CritParty.glyphsPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CritParty.glyphsPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		F43567BB247F11B100BDF248 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F43567BE247F11B100BDF248 /* CritParty-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CritParty-Prefix.pch"; sourceTree = "<group>"; };
@@ -67,7 +65,7 @@
 			files = (
 				F43567C2247F11B100BDF248 /* GlyphsCore.framework in Frameworks */,
 				F43567BC247F11B100BDF248 /* Cocoa.framework in Frameworks */,
-				61CA97F813CD049F956E9EB0 /* libPods-CritParty.a in Frameworks */,
+				56ED314C2486CFB2001F8544 /* libSocketRocket.a in Frameworks */,
 				F47962DD248017FA006565F7 /* WebRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,22 +73,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		49FE9A5BC178D3204A9FB50C /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				1B34971BF24BE7EB8B0C4076 /* Pods-CritParty.debug.xcconfig */,
-				1413CD3A206E673AF236FE11 /* Pods-CritParty.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		F43567AF247F11B100BDF248 = {
 			isa = PBXGroup;
 			children = (
 				F43567BD247F11B100BDF248 /* CritParty */,
 				F43567BA247F11B100BDF248 /* Frameworks */,
 				F43567B9247F11B100BDF248 /* Products */,
-				49FE9A5BC178D3204A9FB50C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,8 +93,8 @@
 		F43567BA247F11B100BDF248 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				56ED314B2486CFB2001F8544 /* libSocketRocket.a */,
 				F43567BB247F11B100BDF248 /* Cocoa.framework */,
-				5A3EA04E255067AC0FC3BBAE /* libPods-CritParty.a */,
 				F47962D924801764006565F7 /* WebRTC.framework */,
 			);
 			name = Frameworks;
@@ -115,8 +103,8 @@
 		F43567BD247F11B100BDF248 /* CritParty */ = {
 			isa = PBXGroup;
 			children = (
-				F43567C4247F11B100BDF248 /* CritParty.m */,
 				F43567C3247F11B100BDF248 /* CritParty.h */,
+				F43567C4247F11B100BDF248 /* CritParty.m */,
 				F47962E024801C2F006565F7 /* CritPartyWindow.xib */,
 				F43567BE247F11B100BDF248 /* CritParty-Prefix.pch */,
 				F43567C6247F11B100BDF248 /* Info.plist */,
@@ -150,7 +138,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F43567C9247F11B100BDF248 /* Build configuration list for PBXNativeTarget "CritParty" */;
 			buildPhases = (
-				599C78002DB031FBE96FF582 /* [CP] Check Pods Manifest.lock */,
 				F43567B4247F11B100BDF248 /* Sources */,
 				F43567B5247F11B100BDF248 /* Frameworks */,
 				F43567B6247F11B100BDF248 /* Resources */,
@@ -207,31 +194,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		599C78002DB031FBE96FF582 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CritParty-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F43567B4247F11B100BDF248 /* Sources */ = {
@@ -361,23 +323,26 @@
 		};
 		F43567CA247F11B100BDF248 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1B34971BF24BE7EB8B0C4076 /* Pods-CritParty.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = YES;
-				DEVELOPMENT_TEAM = GHYRZM4TBD;
+				DEVELOPMENT_TEAM = X2L8375ZQ7;
 				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks",
-					"$(PROJECT_DIR)DummyClient",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = "CritParty/CritParty-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/SocketRocket";
 				INFOPLIST_FILE = CritParty/Info.plist;
 				INSTALL_PATH = /;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritParty";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = glyphsPlugin;
@@ -386,21 +351,24 @@
 		};
 		F43567CB247F11B100BDF248 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1413CD3A206E673AF236FE11 /* Pods-CritParty.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = GHYRZM4TBD;
+				DEVELOPMENT_TEAM = X2L8375ZQ7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks",
-					"$(PROJECT_DIR)DummyClient",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = "CritParty/CritParty-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/SocketRocket";
 				INFOPLIST_FILE = CritParty/Info.plist;
 				INSTALL_PATH = /;
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.simon-cozens.CritParty";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = glyphsPlugin;
