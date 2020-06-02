@@ -325,22 +325,11 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		[evc setWritingDirection:[d[@"writingDirection"] intValue]];
 		[[evc.graphicView textStorage] setText:string];
 		// now grab the layers and find the right one
-		NSArray* layers = [evc allLayers];
-		NSInteger i = 0;
 		NSLog(@"Setting layer range to %li,%li", selected, selectedLen);
-		[evc.graphicView setSelectedLayerRange:NSMakeRange(selected, selectedLen)];
-		for (GSLayer* l in layers) {
-			if (i == activeIndex) {
-				[evc.graphicView setActiveLayer:l];
-				[evc.graphicView setActiveIndex:i];
-			}
-			if (i >= selected && i < selected + selectedLen) {
-				[self addObserversToLayer:l];
-			}
-			i++;
-		}
-		[evc forceRedraw];
+		[evc.graphicView setSelectedLayerRange:NSMakeRange(activeIndex, 0)];
+
 		[self addObserversToGraphicView:evc.graphicView];
+		[self addObserversToLayer:evc.graphicView.activeLayer];
 		self->pauseNotifications = false;
 	});
 

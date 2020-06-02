@@ -80,8 +80,9 @@
 		layer.components = newLayer.components;
 		layer.anchors = newLayer.anchors;
 		layer.annotations = newLayer.annotations;
-		layer.LSB = newLayer.LSB;
-		layer.RSB = newLayer.RSB;
+		if (fabs(layer.width - newLayer.width) > 0.1) {
+			layer.width = newLayer.width;
+		}
 		[self addObserversToLayer:layer];
 		self->pauseNotifications = false;
 		//    [self send:@{@"type":@"setuptabs", @"from": myusername}];
