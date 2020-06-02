@@ -274,13 +274,9 @@
 	state[@"writingDirection"] = [NSNumber numberWithInt:[evc writingDirection]];
 	for (GSLayer* l in evc.allLayers) {
 		UTF32Char inputChar = [currentDocument.font characterForGlyph:l.parent];
-		bool isControl = [l isKindOfClass:NSClassFromString(@"GSControlLayer")];
-		[layers addObject:@{
-		         @"isControl": [NSNumber numberWithBool:isControl],
-		         @"layerId": (isControl ? @"" : [l layerId]),
-		         @"char": [[NSString alloc] initWithBytes:&inputChar length:4 encoding:NSUTF32LittleEndianStringEncoding],
-		         @"selected": [NSNumber numberWithBool:[[evc selectedLayers] containsObject:l]]
-		}];
+		[layers addObject:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithChar:inputChar], @"char",
+						   @([[evc selectedLayers] containsObject:l]), @"selected",
+						   [l layerId], @"layerId", nil]]; // if layerID is nil, the args will stop, so 'layerId' will not be in the dict
 	}
 	state[@"layers"] = layers;
 	state[@"type"] = @"tab";

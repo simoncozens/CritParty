@@ -325,11 +325,11 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	NSInteger i = 0;
 	for (NSDictionary* l in d[@"layers"]) {
 		NSAttributedString *A;
-		if ([d[@"isControl"] boolValue]) {
-			A = [[NSAttributedString alloc] initWithString:l[@"char"]];
-		} else {
-			A = [[NSAttributedString alloc] initWithString:l[@"char"] attributes:@{@"GSLayerIdAttrib":l[@"layerId"]}];
+		NSDictionary *attributes = nil;
+		if ([l[@"layerId"] length] > 0) {
+			attributes = @{@"GSLayerIdAttrib" : l[@"layerId"]};
 		}
+		A = [[NSAttributedString alloc] initWithString:l[@"char"] attributes:attributes];
 		[string appendAttributedString:A];
 		if([l[@"selected"] boolValue]) {
 			if (selected == -1) {
