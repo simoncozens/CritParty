@@ -48,8 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) id<SignalingClientDelegate,SignalingClientHostDelegate> delegate;
 
 - (instancetype)initWithDelegate:(id<SignalingClientDelegate,SignalingClientHostDelegate>)delegate
-    username: (NSString*)username
-    password: (NSString*)password;
+        username: (NSString*)username
+        password: (NSString*)password;
 
 - (void)newConnection:(NSDictionary*)d;
 - (void)gotSessionId:(NSDictionary*)d;
@@ -65,10 +65,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property RTCSessionDescription* offer;
 
 - (instancetype)initWithDelegate:(id<SignalingClientDelegate,SignalingClientHostDelegate>)delegate
-username: (NSString*)username
-password: (NSString*)password
-sessionid: (NSString*)sessionid
-offer: (RTCSessionDescription*)offer;
+        username: (NSString*)username
+        password: (NSString*)password
+        sessionid: (NSString*)sessionid
+        offer: (RTCSessionDescription*)offer;
 
 - (void)sendIceCandidate:(RTCIceCandidate*)candidate;
 - (void)gotAnswer:(NSDictionary*)d;

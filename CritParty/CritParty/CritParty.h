@@ -30,50 +30,50 @@
 //#define SCLog(...) NSLog(__VA_ARGS__)
 #define SCLog(...)
 
-typedef NS_ENUM(NSInteger, CritPartyMode) {
-    CritPartyModeHost,
-    CritPartyModeGuest
+typedef NS_ENUM (NSInteger, CritPartyMode) {
+	CritPartyModeHost,
+	CritPartyModeGuest
 };
 
 @interface CritParty : NSObject <GlyphsPlugin, SignalingClientDelegate,
-SignalingClientHostDelegate, SignalingClientGuestDelegate,
-RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
- {
-     CritPartyMode mode;
-     bool connected;
-     IBOutlet NSWindow *critPartyWindow;
-     
-     __weak IBOutlet NSTabView *shareJoinTab;
-     // Hosting controls
-     __weak IBOutlet NSTextField *hostUsernameField;
-     __weak IBOutlet NSTextField *hostPassword;
-     __weak IBOutlet NSTextField *hostSessionID;
-     __weak IBOutlet NSPopUpButton *hostFilePopup;
-     // Guest controls
-     __weak IBOutlet NSTextField *guestUsernameField;
-     __weak IBOutlet NSSecureTextField *guestPassword;
-     __weak IBOutlet NSTextField *guestSessionID;
-     
-     
-    __weak IBOutlet NSButton *connectButton;
+	                         SignalingClientHostDelegate, SignalingClientGuestDelegate,
+	                         RTCPeerConnectionDelegate, RTCDataChannelDelegate, NSTabViewDelegate>
+{
+	CritPartyMode mode;
+	bool connected;
+	IBOutlet NSWindow *critPartyWindow;
 
-     __unsafe_unretained IBOutlet NSTextView *textbox;
-     NSMutableDictionary* guestUsers;
-     NSMutableDictionary* peerIds;
-     RTC_OBJC_TYPE(RTCDataChannel)* hostDataChannel;
-     RTC_OBJC_TYPE(RTCPeerConnection)* hostPeerConnection;
-     NSMutableDictionary* answerQueue;
-     NSMutableArray* outgoingQueue;
-     RTC_OBJC_TYPE(RTCFileLogger) * _fileLogger;
-     NSString* myusername;
-     NSMutableDictionary* cursors;
-     unsigned int cursorColor;
-     bool pauseNotifications;
-     NSURL* incomingFontFile;
-     GSFont* sharedFont;
-     NSMutableArray* guestIceCandidateQueue;
+	__weak IBOutlet NSTabView *shareJoinTab;
+	// Hosting controls
+	__weak IBOutlet NSTextField *hostUsernameField;
+	__weak IBOutlet NSTextField *hostPassword;
+	__weak IBOutlet NSTextField *hostSessionID;
+	__weak IBOutlet NSPopUpButton *hostFilePopup;
+	// Guest controls
+	__weak IBOutlet NSTextField *guestUsernameField;
+	__weak IBOutlet NSSecureTextField *guestPassword;
+	__weak IBOutlet NSTextField *guestSessionID;
 
- }
+
+	__weak IBOutlet NSButton *connectButton;
+
+	__unsafe_unretained IBOutlet NSTextView *textbox;
+	NSMutableDictionary* guestUsers;
+	NSMutableDictionary* peerIds;
+	RTC_OBJC_TYPE(RTCDataChannel) * hostDataChannel;
+	RTC_OBJC_TYPE(RTCPeerConnection) * hostPeerConnection;
+	NSMutableDictionary* answerQueue;
+	NSMutableArray* outgoingQueue;
+	RTC_OBJC_TYPE(RTCFileLogger) * _fileLogger;
+	NSString* myusername;
+	NSMutableDictionary* cursors;
+	unsigned int cursorColor;
+	bool pauseNotifications;
+	NSURL* incomingFontFile;
+	GSFont* sharedFont;
+	NSMutableArray* guestIceCandidateQueue;
+
+}
 
 @property(nonatomic, strong) RTC_OBJC_TYPE(RTCPeerConnectionFactory) * factory;
 @property(nonatomic, strong) SignalingClient* client;
