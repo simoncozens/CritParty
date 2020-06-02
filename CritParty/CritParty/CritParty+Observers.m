@@ -182,10 +182,13 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSUInteger pathIndex = [d[@"pathindex"] unsignedIntegerValue];
         self->pauseNotifications = true;
-        [layer removePathAtIndex:pathIndex];
         GSPath *p = [[GSPath alloc] initWithPathDict:d[@"pathDict"]];
         [self addObserversToPath:p];
-        [layer insertPath:p atIndex:pathIndex];
+        if (pathIndex <= [layer countOfPaths]-1) {
+            [layer replacePathAtIndex:pathIndex withPath:p];
+        } else {
+            [layer addPath:p];
+        }
         self->pauseNotifications = false;
         SCLog(@"Constructed a path %@", p);
         [[self editViewController] redraw];
