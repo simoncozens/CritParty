@@ -24,8 +24,8 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		NSArray *arrayOfStuff;
 		[thisBundle loadNibNamed:@"CritPartyWindow" owner:self topLevelObjects:&arrayOfStuff];
 		NSUInteger viewIndex = [arrayOfStuff indexOfObjectPassingTest:^BOOL (id obj, NSUInteger idx, BOOL *stop) {
-		                                return [obj isKindOfClass:[NSWindow class]];
-					}];
+			return [obj isKindOfClass:[NSWindow class]];
+		}];
 		critPartyWindow = [arrayOfStuff objectAtIndex:viewIndex];
 		[connectButton setTarget:self];
 		[connectButton setAction:@selector(connectButton:)];
@@ -137,8 +137,8 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 - (void)appendMessage:(NSString *)message {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		[self->textbox setString:[[
-						  [self->textbox string] stringByAppendingString:message]
-		                          stringByAppendingString:@"\n"]];
+								   [self->textbox string] stringByAppendingString:message]
+								  stringByAppendingString:@"\n"]];
 	});
 }
 
@@ -168,10 +168,10 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	myusername = [hostUsernameField stringValue];
 	// Creating the client will kick off the connection.
 	_client = [[SignalingClientHost alloc]
-	           initWithDelegate:self
-	           username:[hostUsernameField stringValue]
-	           password:[hostPassword stringValue]
-	          ];
+			   initWithDelegate:self
+			   username:[hostUsernameField stringValue]
+			   password:[hostPassword stringValue]
+			   ];
 	// XXX Should be the one in the list
 	GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
 	if (!currentDocument) {
@@ -202,12 +202,12 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	NSString* username = [guestUsernameField stringValue];
 	NSString* password = [guestPassword stringValue];
 	myusername = [guestUsernameField stringValue];
-
+	
 	[self makeOfferWithCompletion:^void (RTCSessionDescription* offer) {
-	         self->_client = [[SignalingClientGuest alloc]
-	                          initWithDelegate:self username:username
-	                          password:password sessionid:sid offer:offer];
-	 }];
+		self->_client = [[SignalingClientGuest alloc]
+						 initWithDelegate:self username:username
+						 password:password sessionid:sid offer:offer];
+	}];
 }
 
 - (void) newConnectionEstablishedForUser:(NSString*) username {
@@ -235,41 +235,52 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		}
 		[self appendMessage:msg];
 		if (mode == CritPartyModeHost) {
-			if ([d[@"from"] isEqualToString:myusername]) { return; }
+			if ([d[@"from"] isEqualToString:myusername]) {
+				return;
+			}
 			[self sendToEveryone:d];
 		}
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"glyphsfile"]) {
+	} else if ([d[@"type"] isEqualToString:@"glyphsfile"]) {
 		[self handleIncomingFontChunk:d];
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"setuptabs"]) {
+	} else if ([d[@"type"] isEqualToString:@"setuptabs"]) {
 		[self sendTabToUser:d[@"from"]];
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"tab"]) {
+	} else if ([d[@"type"] isEqualToString:@"tab"]) {
 		[self setupTab:d];
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"cursor"]) {
+	} else if ([d[@"type"] isEqualToString:@"cursor"]) {
 		[self setCursor:d];
-		if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"node"]) {
+		if (mode == CritPartyModeHost) {
+			[self sendToEveryone:d];
+		}
+	} else if ([d[@"type"] isEqualToString:@"node"]) {
 		if (!([d[@"from"] isEqualToString: myusername])) {
 			[self updateNode:d];
 		}
-		if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"anchor"]) {
+		if (mode == CritPartyModeHost) {
+			[self sendToEveryone:d];
+		}
+	} else if ([d[@"type"] isEqualToString:@"anchor"]) {
 		if (!([d[@"from"] isEqualToString: myusername])) {
 			[self updateAnchor:d];
 		}
-		if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"path"]) {
+		if (mode == CritPartyModeHost) {
+			[self sendToEveryone:d];
+		}
+	} else if ([d[@"type"] isEqualToString:@"path"]) {
 		if (!([d[@"from"] isEqualToString: myusername])) {
 			[self updatePath:d];
 		}
-		if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
-	} else if (d[@"type"] && [d[@"type"] isEqualToString:@"layer"]) {
+		if (mode == CritPartyModeHost) {
+			[self sendToEveryone:d];
+		}
+	} else if ([d[@"type"] isEqualToString:@"layer"]) {
 		NSLog(@"Got a layer from %@", d[@"from"]);
 		if (!([d[@"from"] isEqualToString: myusername])) {
 			[self updateLayer:d];
 		}
-		if (mode == CritPartyModeHost) { [self sendToEveryone:d]; }
+		if (mode == CritPartyModeHost) {
+			[self sendToEveryone:d];
+		}
 	}
-
 }
 
 - (void) send:(NSDictionary*)d {
@@ -353,7 +364,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 - (void) drawForegroundForLayer:(GSLayer*)Layer options:(NSDictionary *)options {
 	if (!connected) { return; }
 	for (NSString *username in cursors) {
-//        NSLog(@"Drawing cursor %@", cursors[username]);
+		// NSLog(@"Drawing cursor %@", cursors[username]);
 
 		NSPoint pt = [cursors[username][@"location"] pointValue];
 		NSBezierPath *c = [self arrowCursorPath];
@@ -416,20 +427,20 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	RTC_OBJC_TYPE(RTCMediaConstraints) * constraints = [self defaultPeerConnectionConstraints];
 	RTC_OBJC_TYPE(RTCConfiguration) * config = [[RTC_OBJC_TYPE(RTCConfiguration) alloc] init];
 	RTC_OBJC_TYPE(RTCCertificate) * pcert = [RTC_OBJC_TYPE(RTCCertificate)
-	                                         generateCertificateWithParams:@{@"expires" : @100000, @"name" : @"RSASSA-PKCS1-v1_5"}];
+											 generateCertificateWithParams:@{@"expires" : @100000, @"name" : @"RSASSA-PKCS1-v1_5"}];
 	RTC_OBJC_TYPE(RTCIceServer) * server1 =
-		[[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ stunServer ]];
+	[[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ stunServer ]];
 	RTC_OBJC_TYPE(RTCIceServer) * server2 =
-		[[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ turnServer ]
-		 username:@"critparty"
-		 credential:@"critparty"];
+	[[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ turnServer ]
+												   username:@"critparty"
+												 credential:@"critparty"];
 	config.sdpSemantics = RTCSdpSemanticsUnifiedPlan;
 	config.iceServers = @[ server2 ];
 	config.certificate = pcert;
-
+	
 	RTCPeerConnection* pc = [_factory peerConnectionWithConfiguration:config
-	                         constraints:constraints
-	                         delegate:self];
+														  constraints:constraints
+															 delegate:self];
 	return pc;
 }
 
