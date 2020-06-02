@@ -47,7 +47,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"GSUpdateInterface" object:nil];
 		[GSCallbackHandler addCallback:self forOperation:GSDrawForegroundCallbackName];
 
-		NSLog(@"Crit party init done");
+		SCLog(@"Crit party init done");
 	}
 	return self;
 }
@@ -59,7 +59,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 
 - (void) loadPlugin {
 	// Set up stuff
-	NSLog(@"Crit party loading");
+	SCLog(@"Crit party loading");
 	NSMenuItem* menuItem = [[NSMenuItem alloc] initWithTitle:@"CritParty" action:@selector(startCritParty) keyEquivalent:@"p"];
 	[menuItem setTarget:self];
 	NSMenuItem* editMenu = [[[NSApplication sharedApplication] mainMenu] itemAtIndex:2];
@@ -225,7 +225,9 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 }
 
 - (void) gotMessage:(NSDictionary*)d {
-	SCLog(@"Got message on data channel %@", d);
+	if (![d[@"type"] isEqualToString:@"cursor"]) {
+		SCLog(@"Got message on data channel %@", d);
+	}
 	if (d[@"message"]) {
 		NSString* msg;
 		if (d[@"from"]) {
@@ -273,8 +275,9 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 			[self sendToEveryone:d];
 		}
 	} else if ([d[@"type"] isEqualToString:@"layer"]) {
-		NSLog(@"Got a layer from %@", d[@"from"]);
+		SCLog(@"Got a layer from %@", d[@"from"]);
 		if (!([d[@"from"] isEqualToString: myusername])) {
+			SCLog(@"Got a layer from %@", d[@"from"]);
 			[self updateLayer:d];
 		}
 		if (mode == CritPartyModeHost) {
@@ -284,7 +287,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 }
 
 - (void) send:(NSDictionary*)d {
-//    SCLog(@"Sending: %@", d);
+	SCLog(@"Sending: %@", d);
 	if (mode == CritPartyModeHost) {
 		[self sendToEveryone:d];
 	} else {

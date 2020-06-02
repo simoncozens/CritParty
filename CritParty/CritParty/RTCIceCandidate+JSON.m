@@ -10,7 +10,6 @@
 
 #import "RTCIceCandidate+JSON.h"
 
-#import <WebRTC/RTCLogging.h>
 
 static NSString const *kRTCICECandidateTypeKey = @"type";
 static NSString const *kRTCICECandidateTypeValue = @"candidate";
@@ -50,7 +49,7 @@ static NSString const *kRTCICECandidatesTypeKey = @"candidates";
 									options:NSJSONWritingPrettyPrinted
 									  error:&error];
 	if (error) {
-		RTCLogError(@"Error serializing JSON: %@", error);
+		SCLog(@"Error serializing JSON: %@", error);
 		return nil;
 	}
 	return data;
@@ -82,7 +81,7 @@ static NSString const *kRTCICECandidatesTypeKey = @"candidates";
 									options:NSJSONWritingPrettyPrinted
 									  error:&error];
 	if (error) {
-		RTCLogError(@"Error serializing JSON: %@", error);
+		SCLog(@"Error serializing JSON: %@", error);
 		return nil;
 	}
 	return data;

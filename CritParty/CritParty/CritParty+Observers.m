@@ -120,7 +120,6 @@
 	if ([keyPath isEqualToString:@"selectedRange"] || [keyPath isEqualToString:@"activeLayer"]) {
 		[self sendUpdatedEditView];
 	}
-
 }
 
 - (NSDictionary*)nodeAsDictionary:(GSNode*)n {
@@ -268,8 +267,7 @@
 - (NSDictionary*)editViewInformation {
 	GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
 	NSWindowController<GSWindowControllerProtocol> *windowController = [currentDocument windowController];
-	NSViewController<GSGlyphEditViewControllerProtocol>* evc =
-		windowController.activeEditViewController;
+	NSViewController<GSGlyphEditViewControllerProtocol>* evc = windowController.activeEditViewController;
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
 	NSMutableArray *layers = [[NSMutableArray alloc] init];
 	state[@"activeIndex"] = [NSNumber numberWithUnsignedLong:[evc.graphicView activeIndex]];
@@ -294,7 +292,7 @@
 	// This is looping horribly. :-(
 	// For the sake of simplicity, let's say only the HOST can change edit view
 	if (mode == CritPartyModeHost) {
-		[self send: [self editViewInformation]];
+		[self send:[self editViewInformation]];
 		[self addObserversToLayer:[self editViewController].activeLayer];
 		[self addObserversToGraphicView:[self editViewController].graphicView];
 	}

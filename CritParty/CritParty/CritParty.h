@@ -22,15 +22,16 @@
 #import <GlyphsCore/GlyphsToolEventProtocol.h>
 #import <GlyphsCore/GSGlyphViewControllerProtocol.h>
 
-@import WebRTC;
-#include "RTCSessionDescription+JSON.h"
-#include "RTCIceCandidate+JSON.h"
+#import "RTCSessionDescription+JSON.h"
+#import "RTCIceCandidate+JSON.h"
 #import "SignalingClient.h"
 
 typedef NS_ENUM (NSInteger, CritPartyMode) {
 	CritPartyModeHost,
 	CritPartyModeGuest
 };
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface CritParty : NSObject <GlyphsPlugin, SignalingClientDelegate,
 	                         SignalingClientHostDelegate, SignalingClientGuestDelegate,
@@ -100,3 +101,4 @@ typedef NS_ENUM (NSInteger, CritPartyMode) {
 - (void) setText:(NSAttributedString*)string;
 @end
 
+NS_ASSUME_NONNULL_END
