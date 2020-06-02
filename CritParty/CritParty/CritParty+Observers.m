@@ -86,6 +86,7 @@
 		self->pauseNotifications = false;
 		//    [self send:@{@"type":@"setuptabs", @"from": myusername}];
 		[[self editViewController] redraw];
+        [[self editViewController].graphicView setActiveLayer:layer];
 	});
 }
 
