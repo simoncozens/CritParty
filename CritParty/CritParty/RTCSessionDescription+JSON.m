@@ -17,35 +17,35 @@ static NSString const *kRTCSessionDescriptionSdpKey = @"sdp";
 (JSON)
 
 + (RTCSdpType)myTypeForString:(NSString*)string {
-    if ([string isEqualToString:@"offer"]) {
-        return RTCSdpTypeOffer;
-    } else if ([string isEqualToString:@"pranswer"]) {
-        return RTCSdpTypePrAnswer;
-  } else if ([string isEqualToString:@"answer"]) {
-    return RTCSdpTypeAnswer;
-  } else {
-      NSAssert(false, @"Not reached");
-    return RTCSdpTypeOffer;
-  }
+	if ([string isEqualToString:@"offer"]) {
+		return RTCSdpTypeOffer;
+	} else if ([string isEqualToString:@"pranswer"]) {
+		return RTCSdpTypePrAnswer;
+	} else if ([string isEqualToString:@"answer"]) {
+		return RTCSdpTypeAnswer;
+	} else {
+		NSAssert(false, @"Not reached");
+		return RTCSdpTypeOffer;
+	}
 }
 
 + (RTC_OBJC_TYPE(RTCSessionDescription) *)descriptionFromJSONDictionary:(NSDictionary *)dictionary {
-  NSString *typeString = dictionary[kRTCSessionDescriptionTypeKey];
-  RTCSdpType type = [[self class] myTypeForString:typeString];
-  NSString *sdp = dictionary[kRTCSessionDescriptionSdpKey];
-  return [[RTC_OBJC_TYPE(RTCSessionDescription) alloc] initWithType:type sdp:sdp];
+	NSString *typeString = dictionary[kRTCSessionDescriptionTypeKey];
+	RTCSdpType type = [[self class] myTypeForString:typeString];
+	NSString *sdp = dictionary[kRTCSessionDescriptionSdpKey];
+	return [[RTC_OBJC_TYPE(RTCSessionDescription) alloc] initWithType:type sdp:sdp];
 }
 
 - (NSDictionary *)asDictionary {
-    NSString *type = [[self class] stringForType:self.type];
-    return @{
-        kRTCSessionDescriptionTypeKey : type,
-        kRTCSessionDescriptionSdpKey : self.sdp
-    };
+	NSString *type = [[self class] stringForType:self.type];
+	return @{
+		kRTCSessionDescriptionTypeKey : type,
+		kRTCSessionDescriptionSdpKey : self.sdp
+	};
 }
-    
+
 - (NSData *)JSONData {
-  return [NSJSONSerialization dataWithJSONObject:[self asDictionary] options:0 error:nil];
+	return [NSJSONSerialization dataWithJSONObject:[self asDictionary] options:0 error:nil];
 }
 
 @end
