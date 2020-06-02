@@ -91,10 +91,16 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
             if (d[@"dataChannel"]) { [(RTCDataChannel*)d[@"dataChannel"] close]; }
             if (d[@"peerConnection"]) { [(RTCPeerConnection*)d[@"peerConnection"] close]; }
         }
+        [guestUsers removeAllObjects];
     } else {
         if (hostDataChannel) { [hostDataChannel close]; }
         if (hostPeerConnection) { [hostPeerConnection close]; }
+        hostDataChannel = nil;
+        hostPeerConnection = nil;
     }
+    [answerQueue removeAllObjects];
+    [guestIceCandidateQueue removeAllObjects];
+    [outgoingQueue removeAllObjects];
     [self.client disconnect];
     [self unlockInterface];
 }
@@ -206,6 +212,7 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 - (void) newConnectionEstablishedForUser:(NSString*) username {
     if(!guestUsers[username]) {
         [self handleConnectionError:@"Lost track of who just joined"];
+        return;
     }
     NSString* message = [username stringByAppendingString:@" has joined"];
     [self appendMessage:message];
