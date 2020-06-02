@@ -70,7 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
 	NSURL* incomingFontFile;
 	GSFont* sharedFont;
 	NSMutableArray* guestIceCandidateQueue;
-
+	NSView<GSGlyphEditViewProtocol, NSTextInputClient> *_activeGraphicView;
+	GSLayer *_activeLayer;
 }
 
 @property(nonatomic, strong) RTC_OBJC_TYPE(RTCPeerConnectionFactory) * factory;
