@@ -4,6 +4,10 @@ class ExpiringCache<T> {
   private lastused: Map<string, number> = new Map<string, number>();
   private expiry: number = 60 * 60 * 24;
 
+  public _values (): Map<string, T> {
+    return this.values;
+  }
+
   public get(key: string): T {
     const hasKey = this.values.has(key);
     let entry: T;

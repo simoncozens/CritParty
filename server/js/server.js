@@ -5,6 +5,7 @@ const WebSocket = require("ws");
 const http = require("http");
 const uuid_1 = require("uuid");
 const expiringcache_1 = require("./expiringcache");
+const Table = require("cli-table");
 const app = express();
 var server = http.createServer(app);
 const port = process.env.PORT || 9000;
@@ -19,6 +20,27 @@ function getNewSessionID() {
     }
     sessions[id.toString()] = {}; // Tiny chance of race
     return id.toString();
+}
+function showSessions() {
+    var sessionCount = 0;
+    var guestCount = 0;
+    const table = new Table({
+        head: ['Session', 'Host', 'Guests']
+    });
+    sessions._values().forEach((value, key) => {
+        sessionCount += 1;
+        guestCount += 1 + value.guests.length;
+        table.push([
+            key,
+            (value.host.username + ":" + value.host.socket._socket.remoteAddress),
+            value.guests.length
+        ]);
+    });
+    console.clear();
+    console.log(`CritParty Server`);
+    console.log(`================\n`);
+    console.log(`Sessions: ${sessionCount} Users: ${guestCount}`);
+    console.log(table.toString());
 }
 function sendTo(connection, message) {
     console.log("Sending to %s/%s: %s", connection.username, (connection.session && connection.session.sessionId), message);
@@ -70,6 +92,7 @@ wss.on("connection", function (ws) {
             connection.username = data["username"];
             connection.session = session;
             sessions.put(session.sessionId, session);
+            showSessions();
             sendTo(connection, { "sessionid": session.sessionId });
             console.log("");
             return;
@@ -99,6 +122,7 @@ wss.on("connection", function (ws) {
             connection.session = session;
             connection.username = username;
             session.guests.push(connection);
+            showSessions();
             sendTo(connection, { "ok": true });
             sendTo(session.host, { "type": "newconnection", "username": username, "peerid": connection.peerId, "offer": offer });
             console.log("");
@@ -163,7 +187,7 @@ wss.on("connection", function (ws) {
                 sendTo(c, { "type": "shutdown" });
                 c.socket.close();
             }
-            delete sessions[session.sessionId];
+            sessions.delete(session.sessionId);
         }
         else {
             // Notify host
@@ -171,8 +195,9 @@ wss.on("connection", function (ws) {
             // Remove this person from the session users
             session.guests = session.guests.filter((c) => c.username != username);
         }
+        showSessions();
     });
 });
-console.log("Listening");
+showSessions();
 server.listen(port);
 //# sourceMappingURL=server.js.map

@@ -6,6 +6,9 @@ class ExpiringCache {
         this.lastused = new Map();
         this.expiry = 60 * 60 * 24;
     }
+    _values() {
+        return this.values;
+    }
     get(key) {
         const hasKey = this.values.has(key);
         let entry;
