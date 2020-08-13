@@ -1,8 +1,8 @@
 # Signalling server
 
-Signalling server URL is set in CritParty/SignallingClient.m. I'm
-running the server on my host. I'm also running a STUN server there
-too.
+Signalling server URL is set in `CritParty/SignallingClient.m`.
+I'm running the server on my host. I'm also running a STUN server 
+there too.
 
 # To use
 
