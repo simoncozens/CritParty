@@ -282,7 +282,9 @@
 }
 
 - (void)send:(NSDictionary*)d {
-	SCLog(@"Sending: %@", d);
+	if (![d[@"type"] isEqualToString:@"cursor"]) {
+		SCLog(@"Sending: %@", d);
+	}
 	if (mode == CritPartyModeHost) {
 		[self sendToEveryone:d];
 	} else {
