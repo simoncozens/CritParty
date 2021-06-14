@@ -1,3 +1,4 @@
+platform :macos, '10.11'
 target 'CritPartyDummyClient' do
   pod 'SocketRocket', '~> 0.5.0'
 end
