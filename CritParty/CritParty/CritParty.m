@@ -39,7 +39,11 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		connected = false;
 		cursorColor = 0;
 		cursors = [[NSMutableDictionary alloc] init];
-		pauseNotifications = false;
+        pauseNotifications = false;
+#ifdef DEBUG
+        _fileLogger = [[RTC_OBJC_TYPE(RTCFileLogger) alloc] init];
+        [_fileLogger start];
+#endif
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseMovedNotification" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseDraggedNotification" object:nil];
