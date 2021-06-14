@@ -14,11 +14,12 @@
 @implementation CritParty (Observers)
 
 -(void)addObserversToEditViewController:(NSViewController<GSGlyphEditViewControllerProtocol> *)editViewController {
-    SCLog(@"__addObserversToEditViewController %@", editViewController);
-    @try {
-        [editViewController removeObserver:self forKeyPath:@"tabBarControl"];
-    } @catch (NSException * __unused exception) {}
-    [editViewController addObserver:self forKeyPath:@"tabBarControl" options:0 context:nil];
+	SCLog(@"__addObserversToEditViewController %@", editViewController);
+	@try {
+		[editViewController removeObserver:self forKeyPath:@"tabBarControl"];
+	}
+	@catch (NSException * __unused exception) {}
+	[editViewController addObserver:self forKeyPath:@"tabBarControl" options:0 context:nil];
 }
 
 -(void)addObserversToGraphicView:(NSView<GSGlyphEditViewProtocol>*)graphicView {
@@ -55,7 +56,7 @@
 	}
 }
 
-- (NSDictionary*)layerAsDictionary:(GSLayer*)l {
+- (NSDictionary *)layerAsDictionary:(GSLayer *)l {
 	return @{
 		@"from": myusername,
 		@"type": @"layer",
@@ -93,7 +94,7 @@
 		}
 		[self addObserversToLayer:layer];
 		self->pauseNotifications = false;
-		//    [self send:@{@"type":@"setuptabs", @"from": myusername}];
+		// [self send:@{@"type":@"setuptabs", @"from": myusername}];
 	});
 }
 
@@ -118,11 +119,10 @@
 
 - (void) sendUpdatedEditView {
 	if(!connected || pauseNotifications) return;
-    [self send:[self editViewInformation]];
-    [self addObserversToLayer:[self editViewController].activeLayer];
-    [self addObserversToGraphicView:[self editViewController].graphicView];
-    [self addObserversToEditViewController:[self editViewController]];
-
+	[self send:[self editViewInformation]];
+	[self addObserversToLayer:[self editViewController].activeLayer];
+	[self addObserversToGraphicView:[self editViewController].graphicView];
+	[self addObserversToEditViewController:[self editViewController]];
 }
 
 @end
