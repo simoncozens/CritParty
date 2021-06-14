@@ -211,7 +211,8 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 		return;
 	}
 	[self addObserversToLayer:[self editViewController].activeLayer];
-	[self addObserversToGraphicView:[self editViewController].graphicView];
+    [self addObserversToEditViewController:[self editViewController]];
+    [self addObserversToGraphicView:[self editViewController].graphicView];
 	[self lockInterface];
 }
 

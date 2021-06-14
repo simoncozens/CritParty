@@ -14,6 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CritParty (Observers)
+-(void)addObserversToEditViewController:(NSViewController<GSGlyphEditViewControllerProtocol> *)editViewController;
 -(void)addObserversToGraphicView:(NSView<GSGlyphEditViewProtocol>*)graphicView;
 -(void)addObserversToLayer:(GSLayer*)l;
 -(void)updateLayer:(NSDictionary*)d;

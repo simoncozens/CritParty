@@ -13,6 +13,14 @@
 
 @implementation CritParty (Observers)
 
+-(void)addObserversToEditViewController:(NSViewController<GSGlyphEditViewControllerProtocol> *)editViewController {
+    SCLog(@"__addObserversToEditViewController %@", editViewController);
+    @try {
+        [editViewController removeObserver:self forKeyPath:@"tabBarControl"];
+    } @catch (NSException * __unused exception) {}
+    [editViewController addObserver:self forKeyPath:@"tabBarControl" options:0 context:nil];
+}
+
 -(void)addObserversToGraphicView:(NSView<GSGlyphEditViewProtocol>*)graphicView {
 	SCLog(@"__addObserversToGraphicView %@", graphicView);
 	if (_activeGraphicView) {
@@ -113,6 +121,8 @@
     [self send:[self editViewInformation]];
     [self addObserversToLayer:[self editViewController].activeLayer];
     [self addObserversToGraphicView:[self editViewController].graphicView];
+    [self addObserversToEditViewController:[self editViewController]];
+
 }
 
 @end
