@@ -49,7 +49,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 		[[NSString alloc] initWithData:messageJSONObject
 		 encoding:NSUTF8StringEncoding];
 	SCLog(@"Sending to ws: %@", messageString);
-	[_socket send:messageString];
+	[_socket sendString:messageString error:nil];
 }
 
 // MARK: - SocketRocket delegate methods
