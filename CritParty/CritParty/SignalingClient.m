@@ -48,7 +48,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 	NSString *messageString =
 		[[NSString alloc] initWithData:messageJSONObject
 		 encoding:NSUTF8StringEncoding];
-	NSLog(@"Sending to ws: %@", messageString);
+	SCLog(@"Sending to ws: %@", messageString);
 	[_socket send:messageString];
 }
 
@@ -56,7 +56,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
 	NSDictionary *d = [NSJSONSerialization JSONObjectWithData:[(NSString*)message dataUsingEncoding:NSUTF8StringEncoding] options:0 error: nil];
-	NSLog(@"Got message %@",d);
+	SCLog(@"Got message %@",d);
 	if (d[@"hello"])     { return; }
 	if (d[@"sessionid"]) {
 		[(SignalingClientHost*)self gotSessionId:d];
@@ -96,7 +96,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
 {
-	NSLog(@":( Websocket Failed With Error %@", error);
+	SCLog(@":( Websocket Failed With Error %@", error);
 	[self gotError:@{@"ok": @"false", @"error": [error description]}];
 }
 
@@ -134,7 +134,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 	NSParameterAssert(d[@"offer"]);
 	NSParameterAssert(d[@"username"]);
 	NSParameterAssert(d[@"peerid"]);
-	NSLog(@"Sending offer %@", d[@"offer"]);
+	SCLog(@"Sending offer %@", d[@"offer"]);
 	RTC_OBJC_TYPE(RTCSessionDescription) * description =
 		[RTC_OBJC_TYPE(RTCSessionDescription) descriptionFromJSONDictionary:d[@"offer"]];
 	NSParameterAssert(description.sdp.length);
@@ -160,7 +160,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 }
 
 - (void)sendAnswer:(RTCSessionDescription*)answer withPeerId: (NSString*)peerid {
-	NSLog(@"Sending answer back to guest with peer id %@", peerid);
+	SCLog(@"Sending answer back to guest with peer id %@", peerid);
 	NSDictionary* message = @{
 	        @"type": @"answer",
 	        @"peerid": peerid,
@@ -170,7 +170,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 }
 
 - (void)sendIceCandidate:(RTCIceCandidate*)icecandidate withPeerId:(nonnull NSString *)peerid {
-	NSLog(@"Sending ICE candidate back to guest with peer id %@", peerid);
+	SCLog(@"Sending ICE candidate back to guest with peer id %@", peerid);
 	NSDictionary* message = @{
 	        @"type": @"ice-candidate",
 	        @"candidate": [icecandidate JSONDictionary],
@@ -245,7 +245,7 @@ NSString *url = @"ws://critparty.corvelsoftware.co.uk:9000/";
 }
 
 - (void)sendIceCandidate:(RTCIceCandidate*)candidate {
-	NSLog(@"Sending ICE candidate back to host");
+	SCLog(@"Sending ICE candidate back to host");
 	NSDictionary* message = @{
 	        @"type": @"ice-candidate",
 	        @"candidate": [candidate JSONDictionary]
