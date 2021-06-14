@@ -36,10 +36,10 @@
 		connected = false;
 		cursorColor = 0;
 		cursors = [[NSMutableDictionary alloc] init];
-        pauseNotifications = false;
+		pauseNotifications = false;
 #ifdef DEBUG
-        _fileLogger = [[RTC_OBJC_TYPE(RTCFileLogger) alloc] init];
-        [_fileLogger start];
+		_fileLogger = [[RTC_OBJC_TYPE(RTCFileLogger) alloc] init];
+		[_fileLogger start];
 #endif
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mouseMoved:) name:@"mouseMovedNotification" object:nil];
@@ -183,11 +183,9 @@
 	mode = CritPartyModeHost;
 	myusername = [hostUsernameField stringValue];
 	// Creating the client will kick off the connection.
-	_client = [[SignalingClientHost alloc]
-			   initWithDelegate:self
-			   username:[hostUsernameField stringValue]
-			   password:[hostPassword stringValue]
-			   ];
+	_client = [[SignalingClientHost alloc] initWithDelegate:self
+												   username:[hostUsernameField stringValue]
+												   password:[hostPassword stringValue]];
 	// XXX Should be the one in the list
 	GSDocument* currentDocument = [(GSApplication *)[NSApplication sharedApplication] currentFontDocument];
 	if (!currentDocument) {
@@ -208,8 +206,8 @@
 		return;
 	}
 	[self addObserversToLayer:[self editViewController].activeLayer];
-    [self addObserversToEditViewController:[self editViewController]];
-    [self addObserversToGraphicView:[self editViewController].graphicView];
+	[self addObserversToEditViewController:[self editViewController]];
+	[self addObserversToGraphicView:[self editViewController].graphicView];
 	[self lockInterface];
 }
 
@@ -227,7 +225,7 @@
 	}];
 }
 
-- (void) newConnectionEstablishedForUser:(NSString*) username {
+- (void)newConnectionEstablishedForUser:(NSString*) username {
 	if(!guestUsers[username]) {
 		[self handleConnectionError:@"Lost track of who just joined"];
 		return;
@@ -241,8 +239,9 @@
 	[self sendFont:sharedFont toUsername:username];
 }
 
-- (void) gotMessage:(NSDictionary*)d {
-	if (![d[@"type"] isEqualToString:@"cursor"]) {
+- (void)gotMessage:(NSDictionary*)d {
+	NSString *type = d[@"type"];
+	if (![type isEqualToString:@"cursor"]) {
 		SCLog(@"Got message on data channel %@", d);
 	}
 	if (d[@"message"]) {
@@ -259,18 +258,18 @@
 			}
 			[self sendToEveryone:d];
 		}
-	} else if ([d[@"type"] isEqualToString:@"glyphsfile"]) {
+	} else if ([type isEqualToString:@"glyphsfile"]) {
 		[self handleIncomingFontChunk:d];
-	} else if ([d[@"type"] isEqualToString:@"setuptabs"]) {
+	} else if ([type isEqualToString:@"setuptabs"]) {
 		[self sendTabToUser:d[@"from"]];
-	} else if ([d[@"type"] isEqualToString:@"tab"]) {
+	} else if ([type isEqualToString:@"tab"]) {
 		[self setupTab:d];
-	} else if ([d[@"type"] isEqualToString:@"cursor"]) {
+	} else if ([type isEqualToString:@"cursor"]) {
 		[self setCursor:d];
 		if (mode == CritPartyModeHost) {
 			[self sendToEveryone:d];
 		}
-	} else if ([d[@"type"] isEqualToString:@"layer"]) {
+	} else if ([type isEqualToString:@"layer"]) {
 		SCLog(@"Got a layer from %@", d[@"from"]);
 		if (!([d[@"from"] isEqualToString: myusername])) {
 			SCLog(@"Got a layer from %@", d[@"from"]);
@@ -489,11 +488,11 @@
 - (NSString*)getUsernameFor:(RTCDataChannel*)dataChannel {
 	__block NSString* answer;
 	[guestUsers enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL* stop) {
-	         RTCDataChannel* candidateDc = ((NSDictionary*)value)[@"dataChannel"];
-	         if (candidateDc == dataChannel) {
-			 answer = (NSString*)key;
-		 }
-	 }];
+		RTCDataChannel* candidateDc = ((NSDictionary*)value)[@"dataChannel"];
+		if (candidateDc == dataChannel) {
+			answer = (NSString*)key;
+		}
+	}];
 	if (!answer) {
 		SCLog(@"XXX No username found for data channel?");
 	}
@@ -516,14 +515,11 @@
 	[hostPeerConnection
 	 offerForConstraints:[self defaultOfferConstraints]
 	 completionHandler:^(RTC_OBJC_TYPE (RTCSessionDescription) * offer, NSError * error) {
-	         SCLog(@"Offer created.");
-	         CritParty *strongSelf = weakSelf;
-	         [strongSelf peerConnection:strongSelf->hostPeerConnection
-	          didCreateSessionDescription:offer
-	          error:error];
-	         completionHandler(offer);
-	 }
-	];
+		SCLog(@"Offer created.");
+		CritParty *strongSelf = weakSelf;
+		[strongSelf peerConnection:strongSelf->hostPeerConnection didCreateSessionDescription:offer error:error];
+		completionHandler(offer);
+	}];
 }
 
 /// MARK: - Signalling client callbacks (common)
@@ -544,28 +540,27 @@
 	__weak CritParty *weakSelf = self;
 	// Create a new peer connection for this client
 	RTCPeerConnection *pc = [self createPeerConnection];
-    if (!pc) {
-        [self handleConnectionError:@"Couldn't create a peer connection"];
-        return;
-    }
+	if (!pc) {
+		[self handleConnectionError:@"Couldn't create a peer connection"];
+		return;
+	}
 	RTCDataChannel *dc = [self createDataChannel:pc];
-    if (!pc) {
-        [self handleConnectionError:@"Couldn't open a data channel"];
-        return;
-    }
+	if (!pc) {
+		[self handleConnectionError:@"Couldn't open a data channel"];
+		return;
+	}
 
 	// File it away
 	guestUsers[username] = @{
-	        @"peerConnection": pc,
-	        @"peerId": peerId,
-	        @"dataChannel": dc
+		@"peerConnection": pc,
+		@"peerId": peerId,
+		@"dataChannel": dc
 	};
 	__weak RTCPeerConnection *weakPc = pc;
 	[pc setRemoteDescription:offer
-	 completionHandler:^(NSError *error) {
-	         [weakSelf peerConnection:weakPc
-	          didSetSessionDescriptionWithError:error];
-	 }];
+		   completionHandler:^(NSError *error) {
+		[weakSelf peerConnection:weakPc didSetSessionDescriptionWithError:error];
+	}];
 }
 
 - (void)signalingClient:(SignalingClient *)client didReturnSessionID:(NSString *)sessionid {
@@ -609,11 +604,10 @@
 	__weak CritParty *weakSelf = self;
 	__weak RTC_OBJC_TYPE(RTCPeerConnection) * weakPc = hostPeerConnection;
 	[hostPeerConnection setRemoteDescription:answer
-	 completionHandler:^(NSError *error) {
-	         [weakSelf peerConnection:weakPc
-	          didSetSessionDescriptionWithError:error];
-	         [weakSelf tryToDrainIceCandidateQueue];
-	 }];
+						   completionHandler:^(NSError *error) {
+		[weakSelf peerConnection:weakPc didSetSessionDescriptionWithError:error];
+		[weakSelf tryToDrainIceCandidateQueue];
+	}];
 }
 
 - (void)tryToDrainIceCandidateQueue {
@@ -649,8 +643,8 @@
 
 - (RTC_OBJC_TYPE(RTCMediaConstraints) *)defaultOfferConstraints {
 	NSDictionary *mandatoryConstraints = @{
-	        @"OfferToReceiveAudio" : @"false",
-	        @"OfferToReceiveVideo" : @"false",
+		@"OfferToReceiveAudio" : @"false",
+		@"OfferToReceiveVideo" : @"false",
 	};
 	RTC_OBJC_TYPE(RTCMediaConstraints) * constraints =
 		[[RTC_OBJC_TYPE(RTCMediaConstraints) alloc] initWithMandatoryConstraints:mandatoryConstraints
@@ -660,7 +654,7 @@
 
 - (RTC_OBJC_TYPE(RTCMediaConstraints) *)defaultPeerConnectionConstraints {
 	NSDictionary *optionalConstraints = @{
-	        @"DtlsSrtpKeyAgreement" : @"true"
+		@"DtlsSrtpKeyAgreement" : @"true"
 	};
 	RTC_OBJC_TYPE(RTCMediaConstraints) * constraints =
 		[[RTC_OBJC_TYPE(RTCMediaConstraints) alloc] initWithMandatoryConstraints:nil
@@ -670,8 +664,8 @@
 
 - (void)sendToDataChannel:(RTCDataChannel*)dc data:(NSDictionary*)d {
 	NSData* json = [NSJSONSerialization dataWithJSONObject:d
-	                options:NSJSONWritingPrettyPrinted
-	                error:nil];
+												   options:NSJSONWritingPrettyPrinted
+													 error:nil];
 	RTCDataBuffer* db = [[RTC_OBJC_TYPE(RTCDataBuffer) alloc]initWithData:json isBinary:false];
 	// Set up a queue if we don't have one
 	while (dc.channelId >= [outgoingQueue count]) {
@@ -747,7 +741,7 @@
 }
 
 - (void)peerConnection:(RTC_OBJC_TYPE(RTCPeerConnection) *)peerConnection
-        didSetSessionDescriptionWithError:(NSError *)error {
+		didSetSessionDescriptionWithError:(NSError *)error {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		if (error) {
 			[self handleConnectionError:@"Failed to set session description."];
@@ -762,18 +756,18 @@
 			[peerConnection
 			 answerForConstraints:constraints
 			 completionHandler:^(RTC_OBJC_TYPE (RTCSessionDescription) * sdp, NSError * error) {
-			         CritParty *strongSelf = weakSelf;
-			         [strongSelf peerConnection:peerConnection
-			          didCreateSessionDescription:sdp
-			          error:error];
-			 }];
+				CritParty *strongSelf = weakSelf;
+				[strongSelf peerConnection:peerConnection
+			   didCreateSessionDescription:sdp
+									 error:error];
+			}];
 		}
 	});
 }
 
 - (void)peerConnection:(RTC_OBJC_TYPE(RTCPeerConnection) *)peerConnection
-        didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
-        error:(NSError *)error {
+didCreateSessionDescription:(RTC_OBJC_TYPE(RTCSessionDescription) *)sdp
+				 error:(NSError *)error {
 	dispatch_async(dispatch_get_main_queue(), ^{
 		if (error) {
 			[self handleConnectionError:[error description]];
@@ -783,16 +777,15 @@
 		__weak CritParty *weakSelf = self;
 		__weak RTC_OBJC_TYPE(RTCPeerConnection) * weakPc = peerConnection;
 		[peerConnection setLocalDescription:sdp
-		 completionHandler:^(NSError *error) {
-		         CritParty *strongSelf = weakSelf;
-		         [strongSelf peerConnection:weakPc
-		          didSetSessionDescriptionWithError:error];
-		 }];
+						  completionHandler:^(NSError *error) {
+			CritParty *strongSelf = weakSelf;
+			[strongSelf peerConnection:weakPc didSetSessionDescriptionWithError:error];
+		}];
 		if (sdp.type == RTCSdpTypeAnswer) {
 			// Work out where it's going
 			NSString* peerId = [self getPeerIdFor: peerConnection];
 			if (peerId) {
-				self->answerQueue[[peerConnection description]] = @{                    @"answer": sdp, @"peerId": peerId};
+				self->answerQueue[[peerConnection description]] = @{ @"answer": sdp, @"peerId": peerId };
 				assert(peerConnection.remoteDescription && peerConnection.localDescription);
 
 			} else {
@@ -827,7 +820,7 @@
 }
 
 - (void)dataChannel:(nonnull RTC_OBJC_TYPE(RTCDataChannel) *)dataChannel didChangeBufferedAmount:(uint64_t)amount {
-//    SCLog(@"Channel changed buffered amount %llu", amount);
+	// SCLog(@"Channel changed buffered amount %llu", amount);
 	// Send another message from outgoing queue.
 	[self tryToDrainMessageQueue:dataChannel];
 }

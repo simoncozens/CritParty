@@ -63,7 +63,10 @@
 
 - (void)handleIncomingFontChunk:(NSDictionary*)d {
 	// Chunks are guaranteed to arrive in order
-	if ([d[@"chunk"] unsignedIntValue] == 0) {
+	SCLog(@"__handleIncomingFontChunk: %@", d);
+	NSUInteger chunk = [d[@"chunk"] unsignedIntValue];
+	NSUInteger total = [d[@"total"] unsignedIntValue];
+	if (chunk == 0) {
 		// First chunk, create a file
 		incomingFontFile = [self tempFile];
 		[[NSFileManager defaultManager] createFileAtPath:[incomingFontFile path] contents:nil attributes:nil];
@@ -74,20 +77,24 @@
 		[self handleConnectionError:[@"Couldn't write incoming file: " stringByAppendingString:[error description]]];
 	}
 	[fileHandle seekToEndOfFile];
-	NSData* chunk = [[NSData alloc] initWithBase64EncodedString:d[@"data"] options:0];
-	[fileHandle writeData:chunk];
-	[self appendMessage:[NSString stringWithFormat:@"Downloading file %i%%", (int)(100 * [d[@"chunk"] unsignedIntValue] / (float)[d[@"total"] unsignedIntValue])]];
-	if ([d[@"chunk"] unsignedIntValue] == [d[@"total"] unsignedIntValue]) {
+	NSData* data = [[NSData alloc] initWithBase64EncodedString:d[@"data"] options:0];
+	[fileHandle writeData:data];
+	if (total > 0) {
+		[self appendMessage:[NSString stringWithFormat:@"Downloading file %i%%", (int)(100 * chunk / (float)total)]];
+	}
+	else {
+		[self appendMessage:@"Downloaded file"];
+	}
+	if (chunk == total) {
 		[fileHandle closeFile];
 		NSLog(@"Open!");
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentReceivedAndOpened:) name:@"GSDocumentWasOpenedNotification" object:nil];
-
 		[(GSApplication *)[NSApplication sharedApplication] openDocumentWithContentsOfURL:incomingFontFile display:true];
 	}
 }
 
 - (void) documentReceivedAndOpened:(NSNotification*)n {
-	[self send:@{@"type":@"setuptabs", @"from": myusername}];
+	[self send:@{@"type": @"setuptabs", @"from": myusername}];
 	[[NSFileManager defaultManager] removeItemAtURL:incomingFontFile error:nil];
 }
 
