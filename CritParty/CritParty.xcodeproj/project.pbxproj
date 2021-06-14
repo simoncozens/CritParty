@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		56ED314C2486CFB2001F8544 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 56ED314B2486CFB2001F8544 /* libSocketRocket.a */; };
+		56C7DDD02677AF9800A27138 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56C7DDCF2677AF9800A27138 /* GlyphsCore.framework */; };
+		56ED314C2486CFB2001F8544 /* libsocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 56ED314B2486CFB2001F8544 /* libsocketRocket.a */; };
 		F43567BC247F11B100BDF248 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43567BB247F11B100BDF248 /* Cocoa.framework */; };
-		F43567C2247F11B100BDF248 /* GlyphsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43567C1247F11B100BDF248 /* GlyphsCore.framework */; };
 		F43567C5247F11B100BDF248 /* CritParty.m in Sources */ = {isa = PBXBuildFile; fileRef = F43567C4247F11B100BDF248 /* CritParty.m */; };
 		F47962DD248017FA006565F7 /* WebRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F47962D924801764006565F7 /* WebRTC.framework */; };
 		F47962DE248017FA006565F7 /* WebRTC.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F47962D924801764006565F7 /* WebRTC.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -36,11 +36,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		56ED314B2486CFB2001F8544 /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = "../../../../Library/Developer/Xcode/DerivedData/CritParty-axxdjyprmyicbpgplkwapxaqviya/Build/Products/Debug/SocketRocket/libSocketRocket.a"; sourceTree = "<group>"; };
+		56C7DDCF2677AF9800A27138 /* GlyphsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = GlyphsCore.framework; path = "/Applications/Glyphs 3.app/Contents/Frameworks/GlyphsCore.framework"; sourceTree = "<absolute>"; };
+		56ED314B2486CFB2001F8544 /* libsocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsocketRocket.a; sourceTree = "<group>"; };
 		F43567B8247F11B100BDF248 /* CritParty.glyphsPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CritParty.glyphsPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		F43567BB247F11B100BDF248 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F43567BE247F11B100BDF248 /* CritParty-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CritParty-Prefix.pch"; sourceTree = "<group>"; };
-		F43567C1247F11B100BDF248 /* GlyphsCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GlyphsCore.framework; path = /Applications/Glyphs.app/Contents/Frameworks/GlyphsCore.framework; sourceTree = "<absolute>"; };
 		F43567C3247F11B100BDF248 /* CritParty.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CritParty.h; sourceTree = "<group>"; };
 		F43567C4247F11B100BDF248 /* CritParty.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CritParty.m; sourceTree = "<group>"; };
 		F43567C6247F11B100BDF248 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -63,9 +63,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F43567C2247F11B100BDF248 /* GlyphsCore.framework in Frameworks */,
+				56C7DDD02677AF9800A27138 /* GlyphsCore.framework in Frameworks */,
 				F43567BC247F11B100BDF248 /* Cocoa.framework in Frameworks */,
-				56ED314C2486CFB2001F8544 /* libSocketRocket.a in Frameworks */,
+				56ED314C2486CFB2001F8544 /* libsocketRocket.a in Frameworks */,
 				F47962DD248017FA006565F7 /* WebRTC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -93,7 +93,8 @@
 		F43567BA247F11B100BDF248 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				56ED314B2486CFB2001F8544 /* libSocketRocket.a */,
+				56C7DDCF2677AF9800A27138 /* GlyphsCore.framework */,
+				56ED314B2486CFB2001F8544 /* libsocketRocket.a */,
 				F43567BB247F11B100BDF248 /* Cocoa.framework */,
 				F47962D924801764006565F7 /* WebRTC.framework */,
 			);
@@ -114,21 +115,12 @@
 				F47962E924801CA3006565F7 /* RTCSessionDescription+JSON.m */,
 				F47962E224801CA0006565F7 /* SignalingClient.h */,
 				F47962E624801CA2006565F7 /* SignalingClient.m */,
-				F43567C0247F11B100BDF248 /* Supporting Files */,
 				F49CB8212481376100161313 /* CritParty+Observers.h */,
 				F49CB8222481376100161313 /* CritParty+Observers.m */,
 				F49CB82424819CC100161313 /* CritParty+FontTransfer.h */,
 				F49CB82524819CC100161313 /* CritParty+FontTransfer.m */,
 			);
 			path = CritParty;
-			sourceTree = "<group>";
-		};
-		F43567C0247F11B100BDF248 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				F43567C1247F11B100BDF248 /* GlyphsCore.framework */,
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -326,12 +318,13 @@
 		F43567CA247F11B100BDF248 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEPLOYMENT_LOCATION = YES;
 				DEVELOPMENT_TEAM = GHYRZM4TBD;
-				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs/Plugins";
+				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks",
 					"$(PROJECT_DIR)",
@@ -354,6 +347,7 @@
 		F43567CB247F11B100BDF248 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
