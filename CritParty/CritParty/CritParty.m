@@ -13,9 +13,6 @@
 @implementation CritParty
 @synthesize factory = _factory;
 
-NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
-NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
-
 - (id) init {
 	self = [super init];
 	if (self) {
@@ -433,7 +430,9 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	RTC_OBJC_TYPE(RTCConfiguration) * config = [[RTC_OBJC_TYPE(RTCConfiguration) alloc] init];
 	RTC_OBJC_TYPE(RTCCertificate) * pcert = [RTC_OBJC_TYPE(RTCCertificate)
 											 generateCertificateWithParams:@{@"expires" : @100000, @"name" : @"RSASSA-PKCS1-v1_5"}];
-	RTC_OBJC_TYPE(RTCIceServer) * server1 =
+    static NSString* stunServer = @"stun:critparty.corvelsoftware.co.uk";
+    static NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
+    RTC_OBJC_TYPE(RTCIceServer) * server1 =
 	[[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ stunServer ]];
 	RTC_OBJC_TYPE(RTCIceServer) * server2 =
 	[[RTC_OBJC_TYPE(RTCIceServer) alloc] initWithURLStrings:@[ turnServer ]
