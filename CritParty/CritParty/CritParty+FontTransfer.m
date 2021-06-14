@@ -28,7 +28,7 @@
 	// Convert to NSData
 	NSURL *temporaryFileURL = [self tempFile];
 	NSError* outError;
-	BOOL result = [font saveToURL:temporaryFileURL error:&outError];
+	BOOL result = [font saveToURL:temporaryFileURL type:GSPackageFlatFile error:&outError];
 	NSLog(@"Wrote outgoing document on %@", temporaryFileURL);
 	if (!result || outError) {
 		[self handleConnectionError:@"Couldn't send the font"];

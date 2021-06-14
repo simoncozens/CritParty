@@ -61,7 +61,8 @@
 		@"from": myusername,
 		@"type": @"layer",
 		@"layerid": l.layerId,
-		@"layerDict": [l layerDict],
+		@"layerDict": [l propertyListValueFormat:GSFormatVersionCurrent], // TODO: find minimal version of all connected client and use that.
+		@"format": @(GSFormatVersionCurrent),
 	};
 }
 
@@ -80,13 +81,13 @@
 	dispatch_async(dispatch_get_main_queue(), ^{
 		SCLog(@"Updating layer %@", layer);
 		self->pauseNotifications = true;
-		GSLayer *newLayer = [[GSLayer alloc] initWithLayerDict:d[@"layerDict"]];
+		GSFormatVersion format = d[@"format"] ? [d[@"format"] integerValue] : GSFormatVersion1;
+		GSLayer *newLayer = [[GSLayer alloc] initWithDict:d[@"layerDict"] format:format];
 		// GSGlyph *g = layer.parent;
 		// [self addObserversToLayer:newLayer];
 		// [g setLayer:newLayer forKey:d[@"layerId"]];
-		SCLog(@"Constructed a layer %@ (paths %lu)", [newLayer layerDict], (unsigned long)[newLayer countOfPaths]);
-		layer.paths = newLayer.paths;
-		layer.components = newLayer.components;
+		SCLog(@"Constructed a layer %@ (shapes %lu)", [newLayer propertyListValueFormat:GSFormatVersionCurrent], (unsigned long)[newLayer countOfShapes]);
+		layer.shapes = newLayer.shapes;
 		layer.anchors = newLayer.anchors;
 		layer.annotations = newLayer.annotations;
 		if (fabs(layer.width - newLayer.width) > 0.1) {
