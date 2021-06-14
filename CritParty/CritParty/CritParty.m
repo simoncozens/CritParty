@@ -542,7 +542,15 @@ NSString* turnServer = @"turn:critparty.corvelsoftware.co.uk";
 	__weak CritParty *weakSelf = self;
 	// Create a new peer connection for this client
 	RTCPeerConnection *pc = [self createPeerConnection];
+    if (!pc) {
+        [self handleConnectionError:@"Couldn't create a peer connection"];
+        return;
+    }
 	RTCDataChannel *dc = [self createDataChannel:pc];
+    if (!pc) {
+        [self handleConnectionError:@"Couldn't open a data channel"];
+        return;
+    }
 
 	// File it away
 	guestUsers[username] = @{
