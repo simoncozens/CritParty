@@ -10,9 +10,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "RTCCertificate.h"
-#import "RTCCryptoOptions.h"
-#import "RTCMacros.h"
+#import <WebRTC/RTCCertificate.h>
+#import <WebRTC/RTCCryptoOptions.h>
+#import <WebRTC/RTCMacros.h>
 
 @class RTC_OBJC_TYPE(RTCIceServer);
 
@@ -198,23 +198,17 @@ RTC_OBJC_EXPORT
 @property(nonatomic, assign) BOOL allowCodecSwitching;
 
 /**
- * If MediaTransportFactory is provided in PeerConnectionFactory, this flag informs PeerConnection
- * that it should use the MediaTransportInterface.
- */
-@property(nonatomic, assign) BOOL useMediaTransport;
-
-/**
- * If MediaTransportFactory is provided in PeerConnectionFactory, this flag informs PeerConnection
- * that it should use the MediaTransportInterface for data channels.
- */
-@property(nonatomic, assign) BOOL useMediaTransportForDataChannels;
-
-/**
  * Defines advanced optional cryptographic settings related to SRTP and
  * frame encryption for native WebRTC. Setting this will overwrite any
  * options set through the PeerConnectionFactory (which is deprecated).
  */
 @property(nonatomic, nullable) RTC_OBJC_TYPE(RTCCryptoOptions) * cryptoOptions;
+
+/**
+ * An optional string that will be attached to the TURN_ALLOCATE_REQUEST which
+ * which can be used to correlate client logs with backend logs.
+ */
+@property(nonatomic, nullable, copy) NSString *turnLoggingId;
 
 /**
  * Time interval between audio RTCP reports.
@@ -225,6 +219,54 @@ RTC_OBJC_EXPORT
  * Time interval between video RTCP reports.
  */
 @property(nonatomic, assign) int rtcpVideoReportIntervalMs;
+
+/**
+ * Allow implicit rollback of local description when remote description
+ * conflicts with local description.
+ * See: https://w3c.github.io/webrtc-pc/#dom-peerconnection-setremotedescription
+ */
+@property(nonatomic, assign) BOOL enableImplicitRollback;
+
+/**
+ * Control if "a=extmap-allow-mixed" is included in the offer.
+ * See: https://www.chromestatus.com/feature/6269234631933952
+ */
+@property(nonatomic, assign) BOOL offerExtmapAllowMixed;
+
+/**
+ * Defines the interval applied to ALL candidate pairs
+ * when ICE is strongly connected, and it overrides the
+ * default value of this interval in the ICE implementation;
+ */
+@property(nonatomic, copy, nullable) NSNumber *iceCheckIntervalStrongConnectivity;
+
+/**
+ * Defines the counterpart for ALL pairs when ICE is
+ * weakly connected, and it overrides the default value of
+ * this interval in the ICE implementation
+ */
+@property(nonatomic, copy, nullable) NSNumber *iceCheckIntervalWeakConnectivity;
+
+/**
+ * The min time period for which a candidate pair must wait for response to
+ * connectivity checks before it becomes unwritable. This parameter
+ * overrides the default value in the ICE implementation if set.
+ */
+@property(nonatomic, copy, nullable) NSNumber *iceUnwritableTimeout;
+
+/**
+ * The min number of connectivity checks that a candidate pair must sent
+ * without receiving response before it becomes unwritable. This parameter
+ * overrides the default value in the ICE implementation if set.
+ */
+@property(nonatomic, copy, nullable) NSNumber *iceUnwritableMinChecks;
+
+/**
+ * The min time period for which a candidate pair must wait for response to
+ * connectivity checks it becomes inactive. This parameter overrides the
+ * default value in the ICE implementation if set.
+ */
+@property(nonatomic, copy, nullable) NSNumber *iceInactiveTimeout;
 
 - (instancetype)init;
 
