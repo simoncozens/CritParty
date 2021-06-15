@@ -24,8 +24,8 @@ jobs:
         run: |
           export PATH=`pwd`/depot_tools:$PATH
           cd webrtc-checkout/src
-          gn gen ../out/mac_x64 --args='target_os="mac" target_cpu="x64"'
-          gn gen ../out/mac_arm64 --args='target_os="mac" target_cpu="arm64"'
+          gn gen ../out/mac_x64 --args='target_os="mac" target_cpu="x64" is_debug=false rtc_enable_symbol_export=true'
+          gn gen ../out/mac_arm64 --args='target_os="mac" target_cpu="arm64" is_debug=false rtc_enable_symbol_export=true'
       - name: Build x64
         run: |
           export PATH=`pwd`/depot_tools:$PATH
@@ -40,6 +40,7 @@ jobs:
         run: |
           cd webrtc-checkout
           lipo -create -output out/mac_x64/WebRTC.framework/Versions/A/WebRTC out/mac_x64/WebRTC.framework/Versions/A/WebRTC out/mac_arm64/WebRTC.framework/Versions/A/WebRTC
+          strip -x out/mac_x64/WebRTC.framework/Versions/A/WebRTC
       - uses: actions/upload-artifact@v2
         with:
           name: WebRTC-xcframework
