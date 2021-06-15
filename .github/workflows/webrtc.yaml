@@ -1,0 +1,48 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build_webrtc:
+    name: Build WebRTC binary framework
+    runs-on: macos-latest
+    steps:
+      - name: Install depot tools
+        run: git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+      - name: Fetch WebRTC source
+        run: |
+          export PATH=`pwd`/depot_tools:$PATH
+          mkdir webrtc-checkout
+          cd webrtc-checkout
+          fetch --nohooks webrtc
+          gclient sync
+      - name: Checkout master
+        run: |
+          cd webrtc-checkout/src
+          git checkout master
+      - name: Generate build files
+        run: |
+          export PATH=`pwd`/depot_tools:$PATH
+          cd webrtc-checkout/src
+          gn gen ../out/mac_x64 --args='target_os="mac" target_cpu="x64" is_component_build=false is_debug=false rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
+          gn gen ../out/mac_arm64 --args='target_os="mac" target_cpu="arm64" is_component_build=false is_debug=false rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
+      - name: Build x64
+        run: |
+          export PATH=`pwd`/depot_tools:$PATH
+          cd webrtc-checkout
+          ninja -C out/mac_x64 sdk:mac_framework_objc
+      - name: Build arm64
+        run: |
+          export PATH=`pwd`/depot_tools:$PATH
+          cd webrtc-checkout
+          ninja -C out/mac_arm64 sdk:mac_framework_objc
+      - name: Create xcframework
+        run: |
+          cd webrtc-checkout
+          xcodebuild -create-xcframework -framework out/mac_x64/WebRTC.framework -framework out/mac_arm64/WebRTC.framework -output out/WebRTC.xcframework
+      - uses: actions/upload-artifact@v2
+        with:
+          name: WebRTC-xcframework
+          path: webrtc-checkout/out/WebRTC.xcframework
+
+
