@@ -24,8 +24,8 @@ jobs:
         run: |
           export PATH=`pwd`/depot_tools:$PATH
           cd webrtc-checkout/src
-          gn gen ../out/mac_x64 --args='target_os="mac" target_cpu="x64" is_component_build=false is_debug=false rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
-          gn gen ../out/mac_arm64 --args='target_os="mac" target_cpu="arm64" is_component_build=false is_debug=false rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
+          gn gen ../out/mac_x64 --args='target_os="mac" target_cpu="x64"'
+          gn gen ../out/mac_arm64 --args='target_os="mac" target_cpu="arm64"'
       - name: Build x64
         run: |
           export PATH=`pwd`/depot_tools:$PATH
