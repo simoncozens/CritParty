@@ -326,7 +326,7 @@
 				DEVELOPMENT_TEAM = GHYRZM4TBD;
 				DSTROOT = "$(USER_LIBRARY_DIR)/Application Support/Glyphs 3/Plugins";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks",
+					"\"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks\"",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = "CritParty/CritParty-Prefix.pch";
@@ -353,7 +353,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEVELOPMENT_TEAM = GHYRZM4TBD;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SYSTEM_APPS_DIR)/Glyphs.app/Contents/Frameworks",
+					"\"$(SYSTEM_APPS_DIR)/Glyphs 3.app/Contents/Frameworks\"",
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = "CritParty/CritParty-Prefix.pch";
