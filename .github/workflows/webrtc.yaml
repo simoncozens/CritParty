@@ -36,13 +36,13 @@ jobs:
           export PATH=`pwd`/depot_tools:$PATH
           cd webrtc-checkout
           ninja -C out/mac_arm64 sdk:mac_framework_objc
-      - name: Create xcframework
+      - name: Create fat binary
         run: |
           cd webrtc-checkout
-          xcodebuild -create-xcframework -framework out/mac_x64/WebRTC.framework -framework out/mac_arm64/WebRTC.framework -output out/WebRTC.xcframework
+          lipo -create -output out/mac_x64/WebRTC.framework/Versions/A/WebRTC out/mac_x64/WebRTC.framework/Versions/A/WebRTC out/mac_arm64/WebRTC.framework/Versions/A/WebRTC
       - uses: actions/upload-artifact@v2
         with:
           name: WebRTC-xcframework
-          path: webrtc-checkout/out/WebRTC.xcframework
+          path: webrtc-checkout/out/mac_x64/WebRTC.framework
 
 
