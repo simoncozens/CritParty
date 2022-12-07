@@ -14,7 +14,7 @@
     "@types/uuid": "^8.0.0",
     "@types/websocket": "^1.0.0",
     "cli-table": "^0.3.1",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "uuid": "^8.0.0",
     "websocket": "^1.0.31",
     "ws": "^7.4.6"
